@@ -29,7 +29,7 @@ defmodule ElasticsearchEx.MixProject do
 
   defp package do
     [
-      name: :elasticsearchex,
+      name: :elasticsearch_ex,
       files: ["lib", "mix.exs"],
       maintainers: ["Geoffrey Roguelon"],
       licenses: ["MIT"],
