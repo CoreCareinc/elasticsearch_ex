@@ -15,9 +15,7 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/elasticsearch_ex>.
+Documentation can be found at https://hexdocs.pm/elasticsearch_ex.
 
 ## Usage
 
@@ -67,5 +65,8 @@ Response:
 You can also change the HTTP method used by specifying the options `http_method: :get` when calling the function `search/2`.
 
 ```elixir
-ElasticsearchEx.Api.Search.Core.search(%{query: %{match_all: %{}}, size: 1}, url: url, http_method: :get)
+ElasticsearchEx.Api.Search.Core.search(%{query: %{match_all: %{}}, size: 1},
+  url: url,
+  http_method: :get
+)
 ```
