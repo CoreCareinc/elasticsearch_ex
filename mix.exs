@@ -55,6 +55,7 @@ defmodule ElasticsearchEx.MixProject do
   defp deps do
     [
       {:bypass, "~> 2.1", only: :test},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.30", only: :dev, runtime: false},
       {:jason, "~> 1.4"},
       {:req, "~> 0.4"}
