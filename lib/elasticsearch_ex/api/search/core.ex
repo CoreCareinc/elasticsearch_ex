@@ -14,8 +14,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   def search(query, opts \\ []) when is_map(query) and is_list(opts) do
     method = Keyword.get(opts, :http_method, :post)
     url = Keyword.fetch!(opts, :url)
-    body = Jason.encode_to_iodata!(query)
 
-    Req.request(url, method: method, headers: @default_headers, body: body)
+    Req.request(url, method: method, headers: @default_headers, json: query)
   end
 end
