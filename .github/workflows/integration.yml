@@ -23,7 +23,6 @@ jobs:
     name: "Setup dependencies"
     runs-on: ubuntu-22.04
     timeout-minutes: 1
-    outputs:
 
     steps:
       - name: Git checkout
