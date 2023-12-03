@@ -68,8 +68,8 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ needs.setup-deps.outputs.erlang_version }}
-          elixir-version: ${{ needs.setup-deps.outputs.elixir_version }}
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
 
       - name: Restore the dependencies
         uses: actions/cache/restore@v3
