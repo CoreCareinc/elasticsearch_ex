@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - "*"
+    paths-ignore:
+      - "*.md"
+    tags-ignore:
+      - "*"
+  pull_request:
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  ELIXIR_VERSION: 1.13.4-otp-25
+  ERLANG_VERSION: 25.3.2.7
+
+jobs:
+  setup-deps:
+    name: "Setup dependencies"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1
+    outputs:
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        id: beam
+        with:
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+
+      - name: Restore the cache
+        id: cache_restore
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Install dependencies
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        run: |
+          mix do local.hex --if-missing --force, local.rebar --if-missing --force, deps.get
+
+      - name: Save cache
+        uses: actions/cache/save@v3
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        with:
+          key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
+          path: deps/
