@@ -96,5 +96,5 @@ jobs:
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ steps.cache_keys.outputs.cache_key }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-${{ hashFiles('mix.lock') }}
           path: _build/
