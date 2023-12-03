@@ -142,3 +142,173 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-test-${{ hashFiles('mix.lock') }}
           path: _build/
+
+  format:
+    name: Check formatting
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    needs:
+      - compile-dev
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          install-rebar: false
+          install-hex: true
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Restore build
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-
+          path: _build/
+
+      - name: Format code
+        run: mix format --check-formatted
+
+  credo:
+    name: Run Credo
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    needs:
+      - compile-dev
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          install-rebar: false
+          install-hex: true
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Restore build
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-
+          path: _build/
+
+      - name: Run credo
+        run: mix credo --format sarif
+
+  dialyxir:
+    name: Run Dialyxir
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    needs:
+      - compile-dev
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          install-rebar: false
+          install-hex: true
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Restore build
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-
+          path: _build/
+
+      - name: Restore cache
+        id: cache_restore
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dialyxir-
+          path: priv/plts/
+
+      - name: Create Dialyxir PLTs
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
+
+      - name: Save cache
+        uses: actions/cache/save@v3
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        with:
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
+          path: priv/plts/
+
+      - name: Run dialyzer
+        run: mix dialyzer --format github
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    needs:
+      - compile-test
+    # services:
+    #   elasticsearch:
+    #     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    #     ports: ["9200:9200"]
+    #     env:
+    #       discovery.type: "single-node"
+    #       ELASTIC_PASSWORD: "elastic"
+    #       ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ env.ERLANG_VERSION }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          install-rebar: false
+          install-hex: true
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Restore build
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-test-
+          path: _build/
+
+      - name: Run tests
+        env:
+          MIX_ENV: test
+        run: mix test
