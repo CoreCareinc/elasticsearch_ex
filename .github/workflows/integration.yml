@@ -39,8 +39,8 @@ jobs:
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
-          key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
           path: deps/
 
       - name: Install dependencies
@@ -52,5 +52,49 @@ jobs:
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ runner.os }}-${{ steps.system-info.outputs.release }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-${{ hashFiles('mix.lock') }}
           path: deps/
+
+  compile-dev:
+    name: "Compile dev"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    needs:
+      - setup-deps
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Erlang and Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{ needs.setup-deps.outputs.erlang_version }}
+          elixir-version: ${{ needs.setup-deps.outputs.elixir_version }}
+
+      - name: Restore the dependencies
+        uses: actions/cache/restore@v3
+        with:
+          fail-on-cache-miss: true
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-deps-
+          path: deps/
+
+      - name: Restore the cache
+        id: cache_restore
+        uses: actions/cache/restore@v3
+        with:
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ env.ERLANG_VERSION }}-elixir-${{ env.ELIXIR_VERSION }}-mix-dev-
+          path: _build/
+
+      - name: Compile the project
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        env:
+          MIX_ENV: dev
+        run: mix do deps.compile, compile
+
+      - name: Save cache
+        uses: actions/cache/save@v3
+        if: steps.cache_restore.outputs.cache-hit != 'true'
+        with:
+          key: ${{ steps.cache_keys.outputs.cache_key }}
+          path: _build/
