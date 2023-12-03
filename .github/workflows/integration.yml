@@ -291,7 +291,7 @@ jobs:
         with:
           otp-version: ${{ env.ERLANG_VERSION }}
           elixir-version: ${{ env.ELIXIR_VERSION }}
-          install-rebar: false
+          install-rebar: true
           install-hex: true
 
       - name: Restore dependencies
