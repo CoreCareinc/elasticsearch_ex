@@ -64,8 +64,6 @@ jobs:
     name: "Compile test"
     runs-on: ubuntu-22.04
     timeout-minutes: 5
-    needs:
-      - setup-deps
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
