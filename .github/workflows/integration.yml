@@ -15,43 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup-deps:
-    name: "Setup dependencies"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 1
-
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v3
-
-      - name: Set up Erlang and Elixir
-        id: beam
-        uses: erlef/setup-beam@v1
-        with:
-          version-type: "strict"
-          version-file: ".tool-versions"
-          install-hex: true
-          install-rebar: true
-
-      - name: Restore the cache
-        id: cache_restore
-        uses: actions/cache/restore@v3
-        with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
-      - name: Install dependencies
-        if: steps.cache_restore.outputs.cache-hit != 'true'
-        run: mix deps.get
-
-      - name: Save cache
-        uses: actions/cache/save@v3
-        if: steps.cache_restore.outputs.cache-hit != 'true'
-        with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
-          path: deps/
-
   compile-dev:
     name: "Compile dev"
     runs-on: ubuntu-22.04
@@ -71,32 +34,33 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore the dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore the cache
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
           restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
-          path: _build/
+          path: |
+            deps/
+            _build/dev/
 
       - name: Compile the project
         if: steps.cache_restore.outputs.cache-hit != 'true'
+        env:
+          MIX_ENV: dev
         run: |
-          MIX_ENV=dev mix do deps.compile, compile
+          mix deps.get
+          mix deps.compile
+          mix compile
 
       - name: Save cache
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
-          path: _build/
+          path: |
+            deps/
+            _build/dev/
 
   compile-test:
     name: "Compile test"
@@ -117,32 +81,33 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore the dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore the cache
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
           restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-
-          path: _build/
+          path: |
+            deps/
+            _build/test/
 
       - name: Compile the project
         if: steps.cache_restore.outputs.cache-hit != 'true'
+        env:
+          MIX_ENV: test
         run: |
-          MIX_ENV=test mix do deps.compile, compile
+          mix deps.get
+          mix deps.compile
+          mix compile
 
       - name: Save cache
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
-          path: _build/
+          path: |
+            deps/
+            _build/test/
 
   format:
     name: Check formatting
@@ -163,19 +128,14 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
-          path: _build/
+          path: |
+            deps/
+            _build/dev/
 
       - name: Format code
         run: mix format --check-formatted
@@ -199,19 +159,14 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
-          path: _build/
+          path: |
+            deps/
+            _build/dev/
 
       - name: Run credo
         run: mix credo --format sarif
@@ -235,19 +190,14 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
-          path: _build/
+          path: |
+            deps/
+            _build/dev/
 
       - name: Restore cache
         id: cache_restore
@@ -299,20 +249,14 @@ jobs:
           install-hex: true
           install-rebar: true
 
-      - name: Restore dependencies
-        uses: actions/cache/restore@v3
-        with:
-          fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
-          path: deps/
-
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
           key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-
-          path: _build/
+          path: |
+            deps/
+            _build/test/
 
       - name: Run tests
-        run: |
-          MIX_ENV=test mix test
+        run: mix test
