@@ -28,6 +28,7 @@ jobs:
         uses: erlef/setup-beam@v1
         id: beam
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -65,6 +66,7 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -111,6 +113,7 @@ jobs:
         id: setup_beam
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -156,6 +159,7 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -190,6 +194,7 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -224,6 +229,7 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
@@ -286,6 +292,7 @@ jobs:
       - name: Set up Erlang and Elixir
         uses: erlef/setup-beam@v1
         with:
+          version-type: "strict"
           version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
