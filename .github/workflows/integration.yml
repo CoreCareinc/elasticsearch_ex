@@ -88,9 +88,8 @@ jobs:
 
       - name: Compile the project
         if: steps.cache_restore.outputs.cache-hit != 'true'
-        env:
-          MIX_ENV: dev
-        run: mix do deps.compile, compile
+        run: |
+          MIX_ENV=dev mix do deps.compile, compile
 
       - name: Save cache
         uses: actions/cache/save@v3
@@ -135,9 +134,8 @@ jobs:
 
       - name: Compile the project
         if: steps.cache_restore.outputs.cache-hit != 'true'
-        env:
-          MIX_ENV: test
-        run: mix do deps.compile, compile
+        run: |
+          MIX_ENV=test mix do deps.compile, compile
 
       - name: Save cache
         uses: actions/cache/save@v3
@@ -316,10 +314,5 @@ jobs:
           path: _build/
 
       - name: Run tests
-        env:
-          MIX_ENV: test
         run: |
-          MIX_ENV=test mix deps.get
-          MIX_ENV=test mix deps.compile --force
-          MIX_ENV=test mix compile --force
           MIX_ENV=test mix test
