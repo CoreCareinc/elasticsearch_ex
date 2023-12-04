@@ -25,8 +25,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
-        uses: erlef/setup-beam@v1
         id: beam
+        uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
           version-file: ".tool-versions"
@@ -37,20 +37,19 @@ jobs:
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Install dependencies
         if: steps.cache_restore.outputs.cache-hit != 'true'
-        run: |
-          mix do local.hex --if-missing --force, local.rebar --if-missing --force, deps.get
+        run: mix deps.get
 
       - name: Save cache
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-${{ hashFiles('mix.lock') }}
           path: deps/
 
   compile-dev:
@@ -64,6 +63,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -75,15 +75,15 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore the cache
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
           path: _build/
 
       - name: Compile the project
@@ -96,7 +96,7 @@ jobs:
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-${{ hashFiles('mix.lock') }}
           path: _build/
 
   compile-test:
@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
-        id: setup_beam
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -122,15 +122,15 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore the cache
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-test-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-
           path: _build/
 
       - name: Compile the project
@@ -143,7 +143,7 @@ jobs:
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-${{ hashFiles('mix.lock') }}
           path: _build/
 
   format:
@@ -157,6 +157,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -168,14 +169,14 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
           path: _build/
 
       - name: Format code
@@ -192,6 +193,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -203,14 +205,14 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
           path: _build/
 
       - name: Run credo
@@ -227,6 +229,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -238,22 +241,22 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dev-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dev-
           path: _build/
 
       - name: Restore cache
         id: cache_restore
         uses: actions/cache/restore@v3
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dialyxir-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dialyxir-
           path: priv/plts/
 
       - name: Create Dialyxir PLTs
@@ -264,7 +267,7 @@ jobs:
         uses: actions/cache/save@v3
         if: steps.cache_restore.outputs.cache-hit != 'true'
         with:
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-dialyxir-${{ hashFiles('mix.lock') }}
           path: priv/plts/
 
       - name: Run dialyzer
@@ -290,6 +293,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Erlang and Elixir
+        id: beam
         uses: erlef/setup-beam@v1
         with:
           version-type: "strict"
@@ -301,14 +305,14 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-deps-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-deps-
           path: deps/
 
       - name: Restore build
         uses: actions/cache/restore@v3
         with:
           fail-on-cache-miss: true
-          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.setup_beam.outputs.otp-version }}-elixir-${{ steps.setup_beam.outputs.elixir-version }}-mix-test-
+          key: ${{ runner.os }}-${{ runner.arch }}-erlang-${{ steps.beam.outputs.otp-version }}-elixir-${{ steps.beam.outputs.elixir-version }}-mix-test-
           path: _build/
 
       - name: Run tests
