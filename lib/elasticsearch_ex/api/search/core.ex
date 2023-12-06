@@ -5,22 +5,22 @@ defmodule ElasticsearchEx.Api.Search.Core do
   Most search APIs support [multi-target syntax](https://www.elastic.co/guide/en/elasticsearch/reference/current/api-conventions.html#api-multi-index), with the exception of the [explain API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html).
   """
 
-  ## Module attributes
+  alias ElasticsearchEx.Client
 
-  @default_headers %{content_type: "application/json"}
+  ## Module attributes
 
   @default_url "https://localhost:9200"
 
   ## Typespecs
 
   @typedoc "Represents the response from Elasticsearch."
-  @type response :: {:ok, Req.Response.t()} | {:error, Exception.t()}
+  @type response :: {:ok, AnyHttp.Response.t()} | {:error, Exception.t()}
 
   @typedoc "Represents the body expected by the search API."
   @type search_body :: map()
 
   @typedoc "The possible individual options accepted by the search function.s"
-  @type search_opt :: {:http_method, :get | :post} | {:url, binary() | Req.Request.t()}
+  @type search_opt :: {:http_method, :get | :post} | {:url, binary()}
 
   @typedoc "The possible options accepted by the search function.s"
   @type search_opts :: [search_opt()]
@@ -76,9 +76,10 @@ defmodule ElasticsearchEx.Api.Search.Core do
   """
   @spec search(search_body(), search_opts()) :: response()
   def search(query, opts \\ []) when is_map(query) and is_list(opts) do
-    method = Keyword.get(opts, :http_method, :post)
-    url = Keyword.get(opts, :url, "#{@default_url}/_search")
+    {method, opts} = Keyword.pop(opts, :http_method, :post)
 
-    Req.request(url, method: method, headers: @default_headers, json: query)
+    Client.request(method, "/_search", nil, query,
+      ssl: [verify: :verify_none, versions: ~w[tlsv1.2 tlsv1.3]a]
+    )
   end
 end
