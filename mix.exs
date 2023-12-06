@@ -63,12 +63,18 @@ defmodule ElasticsearchEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:bypass, "~> 2.1", only: :test},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
+      {:any_http, "~> 0.2", path: "/Users/geoffrey/Developer/groguelon/any_http"},
       {:jason, "~> 1.4"},
-      {:req, "~> 0.4"}
+
+      ## Dev dependencies
+      {:ex_doc, "~> 0.30", only: :dev, runtime: false},
+
+      ## Test dependencies
+      {:bypass, "~> 2.1", only: :test},
+
+      ## Dev & Test dependencies
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 end
