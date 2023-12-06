@@ -11,7 +11,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   @type search_body :: map()
 
   @typedoc "The possible individual options accepted by the search function.s"
-  @type search_opt :: {:http_method, :get | :post} | {:url, binary()}
+  @type search_opt :: {:http_method, :get | :post} | {:index, atom() | binary()}
 
   @typedoc "The possible options accepted by the search function.s"
   @type search_opts :: [search_opt()]
