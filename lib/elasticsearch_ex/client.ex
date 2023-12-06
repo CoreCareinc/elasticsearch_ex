@@ -9,6 +9,8 @@ defmodule ElasticsearchEx.Client do
 
   @default_headers %{@content_type_key => @application_json}
 
+  @success_code 200..299
+
   ## Public functions
 
   def request(method, path, headers \\ nil, body \\ nil, opts \\ []) do
@@ -18,9 +20,9 @@ defmodule ElasticsearchEx.Client do
 
     case AnyHttp.request(method, uri, headers, body, opts) do
       {:ok, %AnyHttp.Response{status: status, headers: headers, body: body}}
-      when status in 200..299 ->
+      when status in @success_code ->
         body =
-          if json_response?(headers) do
+          if json_response?(headers) and is_binary(body) do
             Jason.decode!(body)
           else
             body
@@ -91,5 +93,5 @@ defmodule ElasticsearchEx.Client do
     Jason.encode!(body)
   end
 
-  defp prepare_body(_headers, body), do: body
+  defp prepare_body!(_headers, body), do: body
 end
