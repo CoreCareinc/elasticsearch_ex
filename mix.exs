@@ -55,15 +55,16 @@ defmodule ElasticsearchEx.MixProject do
 
   defp dialyzer do
     [
-      plt_file: {:no_warn, "priv/plts/project.plt"},
-      ignore_warnings: ".dialyzer_ignore.exs"
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+      plt_add_apps: [:any_http, :jason],
+      list_unused_filters: true
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:any_http, "~> 0.2", path: "/Users/geoffrey/Developer/groguelon/any_http"},
+      {:any_http, "~> 0.2"},
       {:jason, "~> 1.4"},
 
       ## Dev dependencies

@@ -1,4 +1,10 @@
 defmodule ElasticsearchEx.Client do
+  @moduledoc false
+
+  ## Typespecs
+
+  @type response :: {:ok, term()}
+
   ## Module attributes
 
   @default_url URI.new!("https://elastic:elastic@localhost:9200")
