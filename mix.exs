@@ -9,6 +9,8 @@ defmodule ElasticsearchEx.MixProject do
       app: :elasticsearch_ex,
       version: @version,
       elixir: "~> 1.13",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      elixirc_options: [debug_info: Mix.env() == :dev],
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -27,6 +29,10 @@ defmodule ElasticsearchEx.MixProject do
       mod: {ElasticsearchEx.Application, []}
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp package do
     [

@@ -7,7 +7,7 @@ defmodule ElasticsearchEx.Client do
 
   ## Module attributes
 
-  @default_url URI.new!("https://elastic:elastic@localhost:9200")
+  @default_url Application.compile_env(:elasticsearch_ex, :url) |> URI.new!()
 
   @content_type_key "content-type"
 

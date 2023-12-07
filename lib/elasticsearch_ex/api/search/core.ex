@@ -11,7 +11,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   @type search_body :: map()
 
   @typedoc "The possible individual options accepted by the search function.s"
-  @type search_opt :: {:http_method, :get | :post} | {:index, atom() | binary()}
+  @type search_opt :: {:index, atom() | binary()}
 
   @typedoc "The possible options accepted by the search function.s"
   @type search_opts :: [search_opt()]
@@ -20,10 +20,6 @@ defmodule ElasticsearchEx.Api.Search.Core do
   Returns search hits that match the query defined in the request.
 
   It expects the first argument to be a valid Elasticsearch query represented by an Elixir `Map`.
-
-  ### Options
-
-  * `http_method`: The HTTP method used by the query, can be: `:post` (default) or `:get`
 
   ### Examples
 
@@ -44,8 +40,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   @spec search(search_body(), search_opts()) :: Client.response()
   def search(query, opts \\ []) when is_map(query) and is_list(opts) do
     {index, opts} = Keyword.pop(opts, :index, :_all)
-    {method, opts} = Keyword.pop(opts, :http_method, :post)
 
-    Client.request(method, "/#{index}/_search", nil, query, opts)
+    Client.post("/#{index}/_search", nil, query, opts)
   end
 end
