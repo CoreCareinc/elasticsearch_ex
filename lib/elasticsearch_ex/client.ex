@@ -18,7 +18,7 @@ defmodule ElasticsearchEx.Client do
   ## Public functions
 
   def request(method, path, headers \\ nil, body \\ nil, opts \\ []) do
-    {adapter_opts, query} = Keyword.pop(opts, :adapter_opts)
+    {adapter_opts, query} = Keyword.pop(opts, :adapter_opts, [])
     uri = prepare_uri(path, query)
     headers = prepare_headers(uri, headers)
     body = prepare_body!(headers, body)
