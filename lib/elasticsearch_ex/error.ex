@@ -25,7 +25,8 @@ defmodule ElasticsearchEx.Error do
       status: status,
       reason: error["reason"],
       root_cause: error["root_cause"],
-      type: error["type"]
+      type: error["type"],
+      original: error
     }
   end
 
