@@ -70,6 +70,7 @@ defmodule ElasticsearchEx.MixProject do
   defp deps do
     [
       {:any_http, "~> 0.2"},
+      {:castore, "~> 1.0", optional: true},
       {:jason, "~> 1.4"},
 
       ## Dev dependencies
