@@ -118,6 +118,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     strategy:
+      fail-fast: true
       matrix:
         elixir: ["1.16.0-rc.1", "1.15.7", "1.14.5", "1.13.4"]
         elasticsearch: ["8.11.3", "7.17.16"]
@@ -140,16 +141,10 @@ jobs:
             erlang: "25.3.2.8"
           - elixir: "1.14.5"
             erlang: "24.3.4.15"
-          - elixir: "1.14.5"
-            erlang: "23.3.4.19"
           - elixir: "1.13.4"
             erlang: "25.3.2.8"
           - elixir: "1.13.4"
             erlang: "24.3.4.15"
-          - elixir: "1.13.4"
-            erlang: "23.3.4.19"
-          - elixir: "1.13.4"
-            erlang: "22.3.4.26"
 
     services:
       elasticsearch:
