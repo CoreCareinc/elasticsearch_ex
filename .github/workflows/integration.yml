@@ -32,7 +32,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
           install-hex: true
           install-rebar: true
 
@@ -63,7 +63,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
           install-hex: true
           install-rebar: true
 
@@ -95,7 +95,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR }}
+          elixir-version: ${{ env.ELIXIR_VERSION }}
           install-hex: true
           install-rebar: true
 
@@ -119,37 +119,37 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        elixir: [1.16.0-rc.1, 1.15.7, 1.14.5, 1.13.4]
-        elasticsearch: [8.11.3, 7.17.16]
+        elixir: ["1.16.0-rc.1", "1.15.7", "1.14.5", "1.13.4"]
+        elasticsearch: ["8.11.3", "7.17.16"]
         includes:
-          - elixir: 1.16.0-rc.1
-            erlang: 26.2.1
-          - elixir: 1.16.0-rc.1
-            erlang: 25.3.2.8
-          - elixir: 1.16.0-rc.1
-            erlang: 24.3.4.15
-          - elixir: 1.15.7
-            erlang: 26.2.1
-          - elixir: 1.15.7
-            erlang: 25.3.2.8
-          - elixir: 1.15.7
-            erlang: 24.3.4.15
-          - elixir: 1.14.5
-            erlang: 26.2.1
-          - elixir: 1.14.5
-            erlang: 25.3.2.8
-          - elixir: 1.14.5
-            erlang: 24.3.4.15
-          - elixir: 1.14.5
-            erlang: 23.3.4.19
-          - elixir: 1.13.4
-            erlang: 25.3.2.8
-          - elixir: 1.13.4
-            erlang: 24.3.4.15
-          - elixir: 1.13.4
-            erlang: 23.3.4.19
-          - elixir: 1.13.4
-            erlang: 22.3.4.26
+          - elixir: "1.16.0-rc.1"
+            erlang: "26.2.1"
+          - elixir: "1.16.0-rc.1"
+            erlang: "25.3.2.8"
+          - elixir: "1.16.0-rc.1"
+            erlang: "24.3.4.15"
+          - elixir: "1.15.7"
+            erlang: "26.2.1"
+          - elixir: "1.15.7"
+            erlang: "25.3.2.8"
+          - elixir: "1.15.7"
+            erlang: "24.3.4.15"
+          - elixir: "1.14.5"
+            erlang: "26.2.1"
+          - elixir: "1.14.5"
+            erlang: "25.3.2.8"
+          - elixir: "1.14.5"
+            erlang: "24.3.4.15"
+          - elixir: "1.14.5"
+            erlang: "23.3.4.19"
+          - elixir: "1.13.4"
+            erlang: "25.3.2.8"
+          - elixir: "1.13.4"
+            erlang: "24.3.4.15"
+          - elixir: "1.13.4"
+            erlang: "23.3.4.19"
+          - elixir: "1.13.4"
+            erlang: "22.3.4.26"
 
     services:
       elasticsearch:
