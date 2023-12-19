@@ -5,7 +5,7 @@ defmodule ElasticsearchEx.ErrorTest do
 
   @reason "Invalid request"
   @error_type "invalid_request"
-  @root_cause "attribute body"
+  @root_cause [%{"attribute" => "body"}]
 
   @error %{"reason" => @reason, "type" => @error_type, "root_cause" => @root_cause}
 
