@@ -270,7 +270,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   end
 
   @typedoc "The possible PIT ID."
-  @type pid_id :: binary()
+  @type pit_id :: binary()
 
   @doc """
   Point-in-time is automatically closed when its `keep_alive` has been elapsed. However keeping
@@ -282,8 +282,8 @@ defmodule ElasticsearchEx.Api.Search.Core do
       iex> ElasticsearchEx.Api.Search.Core.close_pit("gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA==")
       {:ok, %{"num_freed" => 1, "succeeded" => true}}
   """
-  @spec close_pit(pid_id(), [{:http_opts, keyword()} | {atom(), any()}]) :: Client.response()
-  def close_pit(pit_id, opts \\ []) when is_list(opts) do
+  @spec close_pit(pit_id(), [{:http_opts, keyword()} | {atom(), any()}]) :: Client.response()
+  def close_pit(pit_id, opts \\ []) when is_binary(pit_id) and is_list(opts) do
     Client.delete("/_pit", nil, %{id: pit_id}, opts)
   end
 end
