@@ -121,7 +121,7 @@ jobs:
       matrix:
         elixir: ["1.16.0-rc.1", "1.15.7", "1.14.5", "1.13.4"]
         elasticsearch: ["8.11.3", "7.17.16"]
-        includes:
+        include:
           - elixir: "1.16.0-rc.1"
             erlang: "26.2.1"
           - elixir: "1.16.0-rc.1"
