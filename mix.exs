@@ -54,6 +54,9 @@ defmodule ElasticsearchEx.MixProject do
       groups_for_modules: [
         API: [
           ElasticsearchEx.Api.Search.Core
+        ],
+        Utils: [
+          ElasticsearchEx.Ndjson
         ]
       ]
     ]
