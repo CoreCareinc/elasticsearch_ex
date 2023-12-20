@@ -261,6 +261,8 @@ jobs:
         run: |
           result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s")
 
+          echo $result
+
           if [[ "$(cat $result | jq -r .timed_out)" = "true" ]]; then
               echo "Elasticsearch is not ready"
               exit 1
