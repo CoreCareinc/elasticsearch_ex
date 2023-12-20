@@ -1,7 +1,8 @@
 [
-  {"lib/elasticsearch_ex/client.ex", :unknown_function, 28},
-  {"lib/elasticsearch_ex/client.ex", :unknown_function, 89},
-  {"lib/elasticsearch_ex/client.ex", :unknown_function, 131},
+  {"lib/elasticsearch_ex/client.ex", :unknown_function, 27},
+  {"lib/elasticsearch_ex/client.ex", :unknown_function, 29},
+  {"lib/elasticsearch_ex/client.ex", :unknown_function, 84},
+  {"lib/elasticsearch_ex/client.ex", :unknown_function, 141},
   {"lib/elasticsearch_ex/error.ex", :unknown_type, 22},
   {"lib/elasticsearch_ex/ndjson.ex", :unknown_function, 24},
   {"lib/elasticsearch_ex/ndjson.ex", :unknown_function, 41}

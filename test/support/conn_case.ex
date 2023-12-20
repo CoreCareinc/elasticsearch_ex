@@ -11,8 +11,8 @@ defmodule ElasticsearchEx.ConnCase do
     end
   end
 
-  setup do
-    bypass = Bypass.open(port: 62_421)
+  setup_all do
+    bypass = Bypass.open()
 
     {:ok, bypass: bypass}
   end
