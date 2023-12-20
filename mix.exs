@@ -76,6 +76,7 @@ defmodule ElasticsearchEx.MixProject do
       # Required because AnyHTTP uses :public_key.cacerts_get() which was introduced recently.
       {:castore, "~> 1.0", optional: true},
       {:jason, "~> 1.4"},
+      {:req, "~> 0.4", optional: true},
 
       ## Dev dependencies
       {:benchee, "~> 1.0", only: :dev},
