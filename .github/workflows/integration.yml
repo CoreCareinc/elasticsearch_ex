@@ -259,11 +259,9 @@ jobs:
 
       - name: Wait for Elasticsearch
         run: |
-          result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=green&timeout=50s" | jq -r .status)
+          result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s")
 
-          if [[ "$result" = "green" ]]; then
-              echo "Elasticsearch is ready"
-          else
+          if [[ "$(cat $result | jq -r .timed_out)" = "true" ]]; then
               echo "Elasticsearch is not ready"
               exit 1
           fi
