@@ -10,7 +10,7 @@ defmodule ElasticsearchEx.MixProject do
       version: @version,
       elixir: "~> 1.13",
       elixirc_paths: elixirc_paths(Mix.env()),
-      elixirc_options: [debug_info: Mix.env() != :prod],
+      elixirc_options: [debug_info: Mix.env() == :dev],
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -68,7 +68,6 @@ defmodule ElasticsearchEx.MixProject do
   defp dialyzer do
     [
       plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
-      plt_add_apps: [:logger],
       list_unused_filters: true
     ]
   end

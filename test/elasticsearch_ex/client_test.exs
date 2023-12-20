@@ -41,16 +41,7 @@ defmodule ElasticsearchEx.ClientTest do
     "status" => 404
   }
 
-  setup_all %{bypass: bypass} do
-    original = Application.get_env(:elasticsearch_ex, :clusters)
-    on_exit(fn -> Application.put_env(:elasticsearch_ex, :clusters, original) end)
-
-    Application.put_env(:elasticsearch_ex, :clusters, %{
-      default: %{endpoint: "http://@localhost:#{bypass.port}"}
-    })
-
-    :ok
-  end
+  setup_all :setup_bypass
 
   describe "head/1" do
     test "returns okay when sucessful", %{bypass: bypass} do

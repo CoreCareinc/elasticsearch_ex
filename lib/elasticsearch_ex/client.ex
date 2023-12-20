@@ -3,8 +3,6 @@ defmodule ElasticsearchEx.Client do
   Provides the functions to make HTTP calls.
   """
 
-  require Logger
-
   ## Module attributes
 
   @content_type_key "content-type"
@@ -24,14 +22,14 @@ defmodule ElasticsearchEx.Client do
     {headers, uri} = prepare_headers(cluster, uri, headers || @default_headers)
     body = prepare_body!(headers, body)
 
-    Logger.debug("URL: #{URI.to_string(uri)}")
+    # URI.to_string(uri) |> IO.inspect(label: "URL")
 
     AnyHttp.request(method, uri, headers, body, http_opts)
     |> maybe_decode_json_body!()
     |> parse_result()
   end
 
-  def head(path, headers \\ @default_headers, opts \\ []) do
+  def head(path, headers \\ nil, opts \\ []) do
     case request(:head, path, headers, nil, opts) do
       {:ok, nil} ->
         :ok
@@ -41,19 +39,19 @@ defmodule ElasticsearchEx.Client do
     end
   end
 
-  def get(path, headers \\ @default_headers, body \\ nil, opts \\ []) do
+  def get(path, headers \\ nil, body \\ nil, opts \\ []) do
     request(:get, path, headers, body, opts)
   end
 
-  def post(path, headers \\ @default_headers, body \\ nil, opts \\ []) do
+  def post(path, headers \\ nil, body \\ nil, opts \\ []) do
     request(:post, path, headers, body, opts)
   end
 
-  def put(path, headers \\ @default_headers, body \\ nil, opts \\ []) do
+  def put(path, headers \\ nil, body \\ nil, opts \\ []) do
     request(:put, path, headers, body, opts)
   end
 
-  def delete(path, headers \\ @default_headers, body \\ nil, opts \\ []) do
+  def delete(path, headers \\ nil, body \\ nil, opts \\ []) do
     request(:delete, path, headers, body, opts)
   end
 
