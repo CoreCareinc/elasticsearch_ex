@@ -259,6 +259,11 @@ jobs:
 
       - name: Wait for Elasticsearch
         run: |
+          until $(curl --output /dev/null --silent --head --fail --insecure --user "elastic:elastic" "https://localhost:9200"); do
+              printf '.'
+              sleep 1
+          done
+
           curl --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s"
           result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=50s")
 
