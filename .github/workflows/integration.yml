@@ -252,9 +252,14 @@ jobs:
       - name: Fetch the dependencies
         run: mix deps.get
 
+      - name: Compile the project
+        env:
+          MIX_ENV: test
+        run: mix compile
+
       - name: Wait for Elasticsearch
         run: |
-          result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s" | jq -r .status)
+          result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=green&timeout=50s" | jq -r .status)
 
           if [[ "$result" = "green" ]]; then
               echo "Elasticsearch is ready"
