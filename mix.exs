@@ -57,6 +57,7 @@ defmodule ElasticsearchEx.MixProject do
           ElasticsearchEx.Api.Search.Core
         ],
         Utils: [
+          ElasticsearchEx.Client,
           ElasticsearchEx.Ndjson
         ]
       ]
