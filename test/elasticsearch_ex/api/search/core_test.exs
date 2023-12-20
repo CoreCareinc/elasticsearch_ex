@@ -271,7 +271,7 @@ defmodule ElasticsearchEx.Api.Search.CoreTest do
   end
 
   describe "clear_scroll/2" do
-    test "returns a sucessful response", %{doc_ids: [doc_id1 | [doc_id2 | _]]} do
+    test "returns a sucessful response" do
       assert {:ok, %{"_scroll_id" => scroll_id}} =
                Search.search(%{query: %{match_all: %{}}, size: 1},
                  scroll: "5s",
