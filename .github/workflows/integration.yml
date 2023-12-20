@@ -252,7 +252,7 @@ jobs:
       - name: Fetch the dependencies
         run: mix deps.get
 
-      - name: Run tests
+      - name: Wait for Elasticsearch
         run: |
           until $(curl --insecure --output /dev/null --silent --head --fail --user "elastic:elastic" "https://localhost:9200"); do
               printf '.'
@@ -281,4 +281,5 @@ jobs:
 
           echo >&2 "Elasticsearch is up"
 
-          mix test
+      - name: Run tests
+        run: mix test
