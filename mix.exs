@@ -18,7 +18,8 @@ defmodule ElasticsearchEx.MixProject do
       description: "Elasticsearch_ex is a client library for Elasticsearch",
       docs: docs(),
       source_url: @source_url,
-      dialyzer: dialyzer()
+      dialyzer: dialyzer(),
+      preferred_cli_env: ["test.watch": :test]
     ]
   end
 
@@ -90,7 +91,8 @@ defmodule ElasticsearchEx.MixProject do
 
       ## Dev & Test dependencies
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 end

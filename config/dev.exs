@@ -4,3 +4,5 @@ import Config
 config :any_http, client_adapter: AnyHttp.Adapters.Httpc
 
 config :elasticsearch_ex, url: "https://elastic:elastic@localhost:9200"
+
+config :mix_test_watch, clear: true
