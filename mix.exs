@@ -76,11 +76,8 @@ defmodule ElasticsearchEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:any_http, "~> 0.2"},
-      # Required because AnyHTTP uses :public_key.cacerts_get() which was introduced recently.
-      {:castore, "~> 1.0", optional: true},
+      {:any_http, "~> 0.6"},
       {:jason, "~> 1.4"},
-      {:req, "~> 0.4", optional: true},
 
       ## Dev dependencies
       {:benchee, "~> 1.0", only: :dev},
