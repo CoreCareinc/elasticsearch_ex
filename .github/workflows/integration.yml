@@ -31,8 +31,8 @@ jobs:
         id: beam
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR_VERSION }}
+          version-type: "strict"
+          version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
 
@@ -62,8 +62,8 @@ jobs:
         id: beam
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR_VERSION }}
+          version-type: "strict"
+          version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
 
@@ -94,8 +94,8 @@ jobs:
         id: beam
         uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{ env.ERLANG_VERSION }}
-          elixir-version: ${{ env.ELIXIR_VERSION }}
+          version-type: "strict"
+          version-file: ".tool-versions"
           install-hex: true
           install-rebar: true
 
