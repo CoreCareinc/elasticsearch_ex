@@ -254,32 +254,13 @@ jobs:
 
       - name: Wait for Elasticsearch
         run: |
-          until $(curl --insecure --output /dev/null --silent --head --fail --user "elastic:elastic" "https://localhost:9200"); do
-              printf '.'
-              sleep 1
-          done
+          result=$(curl --silent --insecure --user "elastic:elastic" "https://localhost:9200/_cluster/health?wait_for_status=green&timeout=5s" | jq -r .status)
 
-          # First wait for ES to start...
-          response=$(curl --insecure --user "elastic:elastic" "https://localhost:9200")
-
-          until [ "$response" = "200" ]; do
-              response=$(curl --insecure --write-out %{http_code} --silent --output /dev/null --user "elastic:elastic" "https://localhost:9200")
-              echo >&2 "Elasticsearch is unavailable - sleeping"
-              sleep 1
-          done
-
-          # next wait for ES status to turn to Green
-          health="$(curl --insecure -fsSL --user "elastic:elastic" "https://localhost:9200/_cat/health?h=status")"
-          health="$(echo "$health" | sed -r 's/^[[:space:]]+|[[:space:]]+$//g')" # trim whitespace (otherwise we'll have "green ")
-
-          until [ "$health" = 'green' ]; do
-              health="$(curl -fsSL --user "elastic:elastic" "https://localhost:9200/_cat/health?h=status")"
-              health="$(echo "$health" | sed -r 's/^[[:space:]]+|[[:space:]]+$//g')" # trim whitespace (otherwise we'll have "green ")
-              echo >&2 "Elasticsearch is unavailable - sleeping"
-              sleep 1
-          done
-
-          echo >&2 "Elasticsearch is up"
+          if [[ "$result" = "green" ]]; then
+              echo "Elasticsearch is ready"
+          else
+              echo "Elasticsearch is not ready"
+          fi
 
       - name: Run tests
         run: mix test
