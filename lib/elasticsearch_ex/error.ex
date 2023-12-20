@@ -20,6 +20,11 @@ defmodule ElasticsearchEx.Error do
 
   @impl true
   @spec exception(AnyHttp.Response.t()) :: t()
+  def exception(%AnyHttp.Response{status: status, body: nil}) do
+    %__MODULE__{status: status, reason: "Response returned #{status} status code"}
+  end
+
+  @impl true
   def exception(%AnyHttp.Response{status: status, body: %{"error" => error}}) do
     %__MODULE__{
       status: status,
