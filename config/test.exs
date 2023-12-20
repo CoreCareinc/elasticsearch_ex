@@ -9,8 +9,5 @@ config :elasticsearch_ex,
     default: %{
       endpoint: "https://elastic:elastic@localhost:9200",
       http_opts: [ssl: [verify: :verify_none]]
-    },
-    bypass: %{
-      endpoint: "http://@localhost:62421"
     }
   }
