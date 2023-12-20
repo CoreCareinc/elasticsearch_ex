@@ -330,7 +330,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
   def create_pit(opts \\ []) when is_list(opts) do
     {index, opts} = extract_index!(opts)
 
-    Client.post("/#{index}/_pit", nil, nil, opts)
+    Client.post("/#{index}/_pit", nil, "", opts)
   end
 
   @doc """

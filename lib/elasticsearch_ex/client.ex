@@ -135,11 +135,13 @@ defmodule ElasticsearchEx.Client do
     end
   end
 
-  defp prepare_body!(%{@content_type_key => @application_json}, body) when not is_nil(body) do
+  defp prepare_body!(%{@content_type_key => @application_json}, body)
+       when not is_nil(body) and body != "" do
     Jason.encode!(body)
   end
 
-  defp prepare_body!(%{@content_type_key => @application_ndjson}, body) when not is_nil(body) do
+  defp prepare_body!(%{@content_type_key => @application_ndjson}, body)
+       when not is_nil(body) and body != "" do
     ElasticsearchEx.Ndjson.encode!(body)
   end
 
