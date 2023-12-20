@@ -265,6 +265,7 @@ jobs:
               echo "Elasticsearch is ready"
           else
               echo "Elasticsearch is not ready"
+              exit 1
           fi
 
       - name: Run tests
