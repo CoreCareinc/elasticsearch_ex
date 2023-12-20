@@ -254,22 +254,22 @@ jobs:
 
       - name: Run tests
         run: |
-          until $(curl --output /dev/null --silent --head --fail --user "elastic:elastic" "https://localhost:9200"); do
+          until $(curl --insecure --output /dev/null --silent --head --fail --user "elastic:elastic" "https://localhost:9200"); do
               printf '.'
               sleep 1
           done
 
           # First wait for ES to start...
-          response=$(curl $host)
+          response=$(curl --insecure $host)
 
           until [ "$response" = "200" ]; do
-              response=$(curl --write-out %{http_code} --silent --output /dev/null --user "elastic:elastic" "https://localhost:9200")
+              response=$(curl --insecure --write-out %{http_code} --silent --output /dev/null --user "elastic:elastic" "https://localhost:9200")
               echo >&2 "Elasticsearch is unavailable - sleeping"
               sleep 1
           done
 
           # next wait for ES status to turn to Green
-          health="$(curl -fsSL --user "elastic:elastic" "https://localhost:9200/_cat/health?h=status")"
+          health="$(curl --insecure -fsSL --user "elastic:elastic" "https://localhost:9200/_cat/health?h=status")"
           health="$(echo "$health" | sed -r 's/^[[:space:]]+|[[:space:]]+$//g')" # trim whitespace (otherwise we'll have "green ")
 
           until [ "$health" = 'green' ]; do
