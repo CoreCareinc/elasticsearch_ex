@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.6.0 (2023-12-21)
+
+* **New features:**
+  * Delegated `ElasticsearchEx.index/2`
+
+* **Changes:**
+  * Renamed the modules to remove the scope (tests are untouched)
+  * Added more tests
+
+* **Bug fixes:**
+  * Fixed a bug on `ElasticsearchEx.Api.Document.update/2` preventing to update.
+
 ## v0.5.0 (2023-12-20)
 
 * **New features:**
