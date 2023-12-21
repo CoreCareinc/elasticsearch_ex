@@ -1,4 +1,4 @@
-defmodule ElasticsearchEx.Api.SearchTest do
+defmodule ElasticsearchEx.Api.Search.CoreTest do
   use ElasticsearchEx.ConnCase, async: true
 
   alias ElasticsearchEx.Api.Search
