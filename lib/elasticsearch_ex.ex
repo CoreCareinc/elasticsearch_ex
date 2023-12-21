@@ -13,5 +13,11 @@ defmodule ElasticsearchEx do
   Refer to `ElasticsearchEx.Api.Search.search/2` documentation.
   """
   @spec search(map(), keyword()) :: response()
-  defdelegate search(query, opts), to: ElasticsearchEx.Api.Search
+  defdelegate search(query, opts \\ []), to: ElasticsearchEx.Api.Search
+
+  @doc """
+  Refer to `ElasticsearchEx.Api.Search.search/2` documentation.
+  """
+  @spec index(map(), keyword()) :: response()
+  defdelegate index(document, opts \\ []), to: ElasticsearchEx.Api.Document
 end
