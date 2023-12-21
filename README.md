@@ -37,7 +37,7 @@ config :elasticsearch_ex,
 
 You can easily query your local Elasticsearch with:
 ```elixir
-ElasticsearchEx.Api.Search.Core.search(%{query: %{match_all: %{}}, size: 1})
+ElasticsearchEx.search(%{query: %{match_all: %{}}, size: 1})
 ```
 
 Response:

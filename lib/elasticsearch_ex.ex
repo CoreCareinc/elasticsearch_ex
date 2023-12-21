@@ -4,8 +4,8 @@ defmodule ElasticsearchEx do
   """
 
   @doc """
-  Refer to `ElasticsearchEx.Api.Search.Core.search/2` documentation.
+  Refer to `ElasticsearchEx.Api.Search.search/2` documentation.
   """
   @spec search(map(), keyword()) :: {:ok, term()} | {:error, ElasticsearchEx.Error.t()}
-  defdelegate search(query, opts), to: ElasticsearchEx.Api.Search.Core
+  defdelegate search(query, opts), to: ElasticsearchEx.Api.Search
 end

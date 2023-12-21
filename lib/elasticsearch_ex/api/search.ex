@@ -1,4 +1,4 @@
-defmodule ElasticsearchEx.Api.Search.Core do
+defmodule ElasticsearchEx.Api.Search do
   @moduledoc """
   Search APIs are used to search and aggregate data stored in Elasticsearch indices and data streams. For an overview and related tutorials, see [The search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html).
 
@@ -34,7 +34,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.search(%{query: %{term: %{"user.id": "kimchy"}}},
+      iex> ElasticsearchEx.Api.Search.search(%{query: %{term: %{"user.id": "kimchy"}}},
       ...>   from: 40,
       ...>   size: 20
       ...> )
@@ -96,7 +96,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.multi_search(
+      iex> ElasticsearchEx.Api.Search.multi_search(
       ...>   [
       ...>     %{},
       ...>     %{"query" => %{"match" => %{"message" => "this is a test"}}},
@@ -186,7 +186,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.async_search(
+      iex> ElasticsearchEx.Api.Search.async_search(
       ...>   %{
       ...>     aggs: %{sale_date: %{date_histogram: %{calendar_interval: "1d", field: "date"}}},
       ...>     sort: [%{date: %{order: "asc"}}]
@@ -232,7 +232,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.get_async_search("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
+      iex> ElasticsearchEx.Api.Search.get_async_search("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
       {:ok,
        %{
          "completion_time_in_millis" => 1583945903130,
@@ -272,7 +272,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.get_async_search_status("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
+      iex> ElasticsearchEx.Api.Search.get_async_search_status("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
       {:ok,
        %{
          "_shards" => %{
@@ -301,7 +301,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.delete_async_search("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
+      iex> ElasticsearchEx.Api.Search.delete_async_search("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
       nil
   """
   @spec delete_async_search(binary(), keyword()) :: {:ok, term()} | {:error, Error.t()}
@@ -320,7 +320,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.create_pit(index: :my-index-000001, keep_alive: "5m")
+      iex> ElasticsearchEx.Api.Search.create_pit(index: :my-index-000001, keep_alive: "5m")
       {:ok,
        %{
          "id" => "gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA=="
@@ -340,7 +340,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.close_pit("gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA==")
+      iex> ElasticsearchEx.Api.Search.close_pit("gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA==")
       {:ok, %{"num_freed" => 1, "succeeded" => true}}
   """
   @spec close_pit(binary(), keyword()) :: {:ok, term()} | {:error, Error.t()}
@@ -357,7 +357,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.terms_enum(%{"field" => "tags", "string" => "kiba"},
+      iex> ElasticsearchEx.Api.Search.terms_enum(%{"field" => "tags", "string" => "kiba"},
       ...>   index: "stackoverflow"
       ...> )
       {:ok,
@@ -381,7 +381,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.get_scroll(
+      iex> ElasticsearchEx.Api.Search.get_scroll(
       ...>   "FGluY2x1ZGVfY29udGV4dF91dWlkDXF1ZXJ5QW5kRmV0Y2gBFnZaRlo5M2xHUzN1VFdLUUxTUDFXOUEAAAAAAAAAWRZBdENUeTlIalF2bWs4WGlOaEVFZTd3",
       ...>   scroll: "1m"
       ...> )
@@ -413,7 +413,7 @@ defmodule ElasticsearchEx.Api.Search.Core do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Search.Core.clear_scroll(
+      iex> ElasticsearchEx.Api.Search.clear_scroll(
       ...>   "FGluY2x1ZGVfY29udGV4dF91dWlkDXF1ZXJ5QW5kRmV0Y2gBFnZaRlo5M2xHUzN1VFdLUUxTUDFXOUEAAAAAAAAAWRZBdENUeTlIalF2bWs4WGlOaEVFZTd3"
       ...> )
       {:ok, %{"num_freed" => 1, "succeeded" => true}}

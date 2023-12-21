@@ -55,7 +55,7 @@ defmodule ElasticsearchEx.MixProject do
       groups_for_modules: [
         API: [
           ElasticsearchEx.Api.Document.Single,
-          ElasticsearchEx.Api.Search.Core
+          ElasticsearchEx.Api.Search
         ],
         Utils: [
           ElasticsearchEx.Client,
