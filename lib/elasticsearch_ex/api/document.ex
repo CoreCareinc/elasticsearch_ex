@@ -285,6 +285,30 @@ defmodule ElasticsearchEx.Api.Document do
 
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html#update-api-example)
   for a detailed list of the body values.
+
+  ### Examples
+
+      iex> ElasticsearchEx.Api.Document.update(
+      ...>   %{
+      ...>     script: %{
+      ...>       source: "ctx._source.message = params.message",
+      ...>       lang: "painless",
+      ...>       params: %{message: "Bye World"}
+      ...>     }
+      ...>   },
+      ...>   index: "my-index-000001",
+      ...>   id: "0"
+      ...> )
+      {:ok,
+       %{
+         "_id" => "0",
+         "_index" => "my-index-000001",
+         "_primary_term" => 1,
+         "_seq_no" => 1,
+         "_version" => 2,
+         "_shards" => %{"failed" => 0, "successful" => 1, "total" => 1},
+         "result" => "updated"
+       }}
   """
   @spec update(map(), keyword()) :: ElasticsearchEx.response()
   def update(document, opts \\ []) do
