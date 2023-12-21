@@ -1,4 +1,4 @@
-defmodule ElasticsearchEx.Api.Document.Single do
+defmodule ElasticsearchEx.Api.Document do
   @moduledoc """
   Provides the APIs for the single document operations.
   """
@@ -29,7 +29,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   Without a specific document ID:
 
-      iex> ElasticsearchEx.Api.Document.Single.index(
+      iex> ElasticsearchEx.Api.Document.index(
       ...>   %{
       ...>     "@timestamp": "2099-11-15T13:12:00",
       ...>     message: "GET /search HTTP/1.1 200 1070000",
@@ -50,7 +50,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   With a specific document ID:
 
-      iex> ElasticsearchEx.Api.Document.Single.index(
+      iex> ElasticsearchEx.Api.Document.index(
       ...>   %{
       ...>     "@timestamp": "2099-11-15T13:12:00",
       ...>     message: "GET /search HTTP/1.1 200 1070000",
@@ -94,7 +94,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.create(
+      iex> ElasticsearchEx.Api.Document.create(
       ...>   %{
       ...>     "@timestamp": "2099-11-15T13:12:00",
       ...>     message: "GET /search HTTP/1.1 200 1070000",
@@ -132,7 +132,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.get_document(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.get_document(index: "my-index-000001", id: "0")
       {:ok,
        %{
          "_id" => "0",
@@ -172,7 +172,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.get_source(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.get_source(index: "my-index-000001", id: "0")
       {:ok,
        %{
          "@timestamp" => "2099-11-15T14:12:12",
@@ -204,7 +204,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.document_exists?(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.document_exists?(index: "my-index-000001", id: "0")
       true
   """
   @spec document_exists?(keyword()) :: boolean()
@@ -225,7 +225,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.source_exists?(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.source_exists?(index: "my-index-000001", id: "0")
       true
   """
   @spec source_exists?(keyword()) :: boolean()
@@ -246,7 +246,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.Single.delete(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.delete(index: "my-index-000001", id: "0")
       {:ok,
        %{
          "_id" => "0",
@@ -258,7 +258,7 @@ defmodule ElasticsearchEx.Api.Document.Single do
          "result" => "deleted"
        }}
 
-      iex> ElasticsearchEx.Api.Document.Single.delete(index: "my-index-000001", id: "1")
+      iex> ElasticsearchEx.Api.Document.delete(index: "my-index-000001", id: "1")
       {:error,
        %ElasticsearchEx.Error{
          reason: "Document with ID: `1` not found",
