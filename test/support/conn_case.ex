@@ -28,7 +28,7 @@ defmodule ElasticsearchEx.ConnCase do
   def create_index(index_name, properties) do
     {:ok, _} =
       ElasticsearchEx.Client.put("/#{index_name}", nil, %{
-        mappings: %{properties: properties},
+        mappings: %{dynamic: :strict, properties: properties},
         settings: %{
           "index.number_of_shards": 1,
           "index.number_of_replicas": 0,
@@ -38,6 +38,8 @@ defmodule ElasticsearchEx.ConnCase do
 
     :ok
   end
+
+  def generate_id, do: :crypto.strong_rand_bytes(15) |> Base.url_encode64(padding: false)
 
   def delete_index(index_name) do
     {:ok, _} = ElasticsearchEx.Client.delete("/#{index_name}", nil, nil)

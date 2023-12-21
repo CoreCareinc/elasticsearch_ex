@@ -293,6 +293,6 @@ defmodule ElasticsearchEx.Api.Document do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
 
-    Client.post("#{index}/_doc/#{document_id}", nil, document, opts)
+    Client.post("#{index}/_update/#{document_id}", nil, document, opts)
   end
 end
