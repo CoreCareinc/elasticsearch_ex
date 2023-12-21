@@ -6,7 +6,6 @@ defmodule ElasticsearchEx.Api.Document do
   import ElasticsearchEx.Api.Utils, only: [extract_index!: 1]
 
   alias ElasticsearchEx.Client
-  alias ElasticsearchEx.Error
 
   ## Public functions
 
@@ -70,7 +69,7 @@ defmodule ElasticsearchEx.Api.Document do
          "result" => "created"
        }}
   """
-  @spec index(map(), keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec index(map(), keyword()) :: ElasticsearchEx.response()
   def index(document, opts \\ []) when is_map(document) and is_list(opts) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop(opts, :id)
@@ -114,7 +113,7 @@ defmodule ElasticsearchEx.Api.Document do
          "result" => "created"
        }}
   """
-  @spec create(map(), keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec create(map(), keyword()) :: ElasticsearchEx.response()
   def create(document, opts \\ []) when is_map(document) and is_list(opts) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
@@ -154,7 +153,7 @@ defmodule ElasticsearchEx.Api.Document do
          "found" => true
        }}
   """
-  @spec get_document(keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec get_document(keyword()) :: ElasticsearchEx.response()
   def get_document(opts \\ []) when is_list(opts) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
@@ -186,7 +185,7 @@ defmodule ElasticsearchEx.Api.Document do
          "user" => %{"id" => "kimchy"}
        }}
   """
-  @spec get_source(keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec get_source(keyword()) :: ElasticsearchEx.response()
   def get_source(opts \\ []) when is_list(opts) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
@@ -268,7 +267,7 @@ defmodule ElasticsearchEx.Api.Document do
          ...
        }}
   """
-  @spec delete(keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec delete(keyword()) :: ElasticsearchEx.response()
   def delete(opts \\ []) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
@@ -289,7 +288,7 @@ defmodule ElasticsearchEx.Api.Document do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-update.html#update-api-example)
   for a detailed list of the body values.
   """
-  @spec update(map(), keyword()) :: {:ok, term()} | {:error, Error.t()}
+  @spec update(map(), keyword()) :: ElasticsearchEx.response()
   def update(document, opts \\ []) do
     {index, opts} = extract_index!(opts)
     {document_id, opts} = Keyword.pop!(opts, :id)
