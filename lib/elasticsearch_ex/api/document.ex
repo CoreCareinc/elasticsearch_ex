@@ -3,7 +3,12 @@ defmodule ElasticsearchEx.Api.Document do
   Provides the APIs for the single document operations.
   """
 
-  import ElasticsearchEx.Api.Utils, only: [extract_index!: 1]
+  import ElasticsearchEx.Api.Utils,
+    only: [
+      extract_required_index_and_optional_id!: 1,
+      extract_required_index_and_required_id!: 1,
+      merge_path_items: 1
+    ]
 
   alias ElasticsearchEx.Client
 
@@ -71,9 +76,8 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec index(map(), keyword()) :: ElasticsearchEx.response()
   def index(document, opts \\ []) when is_map(document) and is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop(opts, :id)
-    path = if(is_nil(document_id), do: "#{index}/_doc", else: "#{index}/_doc/#{document_id}")
+    {index, document_id, opts} = extract_required_index_and_optional_id!(opts)
+    path = merge_path_items([index, "_doc", document_id])
 
     Client.post(path, nil, document, opts)
   end
@@ -115,8 +119,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec create(map(), keyword()) :: ElasticsearchEx.response()
   def create(document, opts \\ []) when is_map(document) and is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.post("#{index}/_doc/#{document_id}", nil, document, opts)
   end
@@ -155,8 +158,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec get_document(keyword()) :: ElasticsearchEx.response()
   def get_document(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.get("#{index}/_doc/#{document_id}", nil, nil, opts)
   end
@@ -187,8 +189,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec get_source(keyword()) :: ElasticsearchEx.response()
   def get_source(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.get("#{index}/_source/#{document_id}", nil, nil, opts)
   end
@@ -208,8 +209,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec document_exists?(keyword()) :: boolean()
   def document_exists?(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.head("#{index}/_doc/#{document_id}", nil, opts) == :ok
   end
@@ -229,8 +229,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec source_exists?(keyword()) :: boolean()
   def source_exists?(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.head("#{index}/_source/#{document_id}", nil, opts) == :ok
   end
@@ -269,8 +268,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec delete(keyword()) :: ElasticsearchEx.response()
   def delete(opts \\ []) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.delete("#{index}/_doc/#{document_id}", nil, nil, opts)
   end
@@ -290,8 +288,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
   @spec update(map(), keyword()) :: ElasticsearchEx.response()
   def update(document, opts \\ []) do
-    {index, opts} = extract_index!(opts)
-    {document_id, opts} = Keyword.pop!(opts, :id)
+    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.post("#{index}/_update/#{document_id}", nil, document, opts)
   end

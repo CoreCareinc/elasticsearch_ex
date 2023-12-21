@@ -6,7 +6,7 @@ defmodule ElasticsearchEx.Api.Search do
   """
 
   import ElasticsearchEx.Api.Utils,
-    only: [extract_index!: 1, extract_index: 1, merge_path_suffix: 2]
+    only: [extract_required_index!: 1, extract_optional_index: 1, merge_path_items: 1]
 
   alias ElasticsearchEx.Client
 
@@ -74,8 +74,8 @@ defmodule ElasticsearchEx.Api.Search do
   """
   @spec search(map(), keyword()) :: ElasticsearchEx.response()
   def search(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_index(opts)
-    path = merge_path_suffix(index, "_search")
+    {index, opts} = extract_optional_index(opts)
+    path = merge_path_items([index, "_search"])
 
     Client.post(path, nil, query, opts)
   end
@@ -163,8 +163,8 @@ defmodule ElasticsearchEx.Api.Search do
   """
   @spec multi_search([map()], keyword()) :: ElasticsearchEx.response()
   def multi_search(queries, opts \\ []) when is_list(queries) and is_list(opts) do
-    {index, opts} = extract_index(opts)
-    path = merge_path_suffix(index, "_msearch")
+    {index, opts} = extract_optional_index(opts)
+    path = merge_path_items([index, "_msearch"])
 
     Client.post(path, @ndjson_headers, queries, opts)
   end
@@ -219,8 +219,8 @@ defmodule ElasticsearchEx.Api.Search do
   """
   @spec async_search(map(), keyword()) :: ElasticsearchEx.response()
   def async_search(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_index(opts)
-    path = merge_path_suffix(index, "_async_search")
+    {index, opts} = extract_optional_index(opts)
+    path = merge_path_items([index, "_async_search"])
 
     Client.post(path, nil, query, opts)
   end
@@ -327,7 +327,7 @@ defmodule ElasticsearchEx.Api.Search do
   """
   @spec create_pit(keyword()) :: ElasticsearchEx.response()
   def create_pit(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_index!(opts)
+    {index, opts} = extract_required_index!(opts)
 
     Client.post("/#{index}/_pit", nil, "", opts)
   end
@@ -368,7 +368,7 @@ defmodule ElasticsearchEx.Api.Search do
   """
   @spec terms_enum(map(), keyword()) :: ElasticsearchEx.response()
   def terms_enum(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_index!(opts)
+    {index, opts} = extract_required_index!(opts)
 
     Client.post("/#{index}/_terms_enum", nil, query, opts)
   end
