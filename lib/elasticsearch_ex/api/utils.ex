@@ -1,5 +1,7 @@
 defmodule ElasticsearchEx.Api.Utils do
-  @moduledoc false
+  @moduledoc """
+  Provides some helpers to make the HTTP calls easier by extracting and manipulating options.
+  """
 
   ## Module attributes
 
