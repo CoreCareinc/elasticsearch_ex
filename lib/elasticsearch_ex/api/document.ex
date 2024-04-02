@@ -132,8 +132,6 @@ defmodule ElasticsearchEx.Api.Document do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html#docs-get-api-query-params)
   for a detailed list of the parameters.
 
-  You can provide the option `source_only: true` to return only the source of the document.
-
   ### Examples
 
       iex> ElasticsearchEx.Api.Document.get(index: "my-index-000001", id: "0")
@@ -157,30 +155,12 @@ defmodule ElasticsearchEx.Api.Document do
          "_version" => 1,
          "found" => true
        }}
-
-  ### Examples - Returns only the source
-
-      iex> ElasticsearchEx.Api.Document.get(index: "my-index-000001", id: "0", source_only: true)
-      {:ok,
-       %{
-         "@timestamp" => "2099-11-15T14:12:12",
-         "http" => %{
-           "request" => %{"method" => "get"},
-           "response" => %{"bytes" => 1_070_000, "status_code" => 200},
-           "version" => "1.1"
-         },
-         "message" => "GET /search HTTP/1.1 200 1070000",
-         "source" => %{"ip" => "127.0.0.1"},
-         "user" => %{"id" => "kimchy"}
-       }}
   """
   @spec get(keyword()) :: ElasticsearchEx.response()
   def get(opts \\ []) when is_list(opts) do
     {index, document_id, opts} = extract_required_index_and_required_id!(opts)
-    {source_only, opts} = Keyword.pop(opts, :source_only, false)
-    segment = if(source_only, do: :_source, else: :_doc)
 
-    Client.get("#{index}/#{segment}/#{document_id}", nil, nil, opts)
+    Client.get("#{index}/_doc/#{document_id}", nil, nil, opts)
   end
 
   # TODO: Remove with v1.0.0
@@ -192,11 +172,9 @@ defmodule ElasticsearchEx.Api.Document do
 
   # TODO: Remove with v1.0.0
   @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.get/1 with `source_only: true` instead"
+  @deprecated "Use ElasticsearchEx.Api.Source.get/1 instead"
   def get_source(opts \\ []) when is_list(opts) do
-    opts = Keyword.put(opts, :source_only, true)
-
-    get(opts)
+    ElasticsearchEx.Api.Source.get(opts)
   end
 
   @doc """
@@ -207,25 +185,16 @@ defmodule ElasticsearchEx.Api.Document do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html#docs-get-api-query-params)
   for a detailed list of the parameters.
 
-  You can provide the option `source_only: true` to return only the source of the document.
-
   ### Examples
 
       iex> ElasticsearchEx.Api.Document.exists?(index: "my-index-000001", id: "0")
-      true
-
-  ### Examples - Returns only the source
-
-      iex> ElasticsearchEx.Api.Document.exists?(index: "my-index-000001", id: "0", source_only: true)
       true
   """
   @spec exists?(keyword()) :: boolean()
   def exists?(opts \\ []) when is_list(opts) do
     {index, document_id, opts} = extract_required_index_and_required_id!(opts)
-    {source_only, opts} = Keyword.pop(opts, :source_only, false)
-    segment = if(source_only, do: :_source, else: :_doc)
 
-    Client.head("#{index}/#{segment}/#{document_id}", nil, opts) == :ok
+    Client.head("#{index}/_doc/#{document_id}", nil, opts) == :ok
   end
 
   # TODO: Remove with v1.0.0
@@ -237,11 +206,9 @@ defmodule ElasticsearchEx.Api.Document do
 
   # TODO: Remove with v1.0.0
   @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.exists?/1 with `source_only: true` instead"
+  @deprecated "Use ElasticsearchEx.Api.Source.exists?/1 instead"
   def source_exists?(opts \\ []) when is_list(opts) do
-    opts = Keyword.put(opts, :source_only, true)
-
-    exists?(opts)
+    ElasticsearchEx.Api.Source.exists?(opts)
   end
 
   @doc """

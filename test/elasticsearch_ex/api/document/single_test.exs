@@ -93,25 +93,6 @@ defmodule ElasticsearchEx.Api.Document.SingleTest do
     end
   end
 
-  describe "get/1 with source_only" do
-    test "raises an exception if missing index", %{fake_id: doc_id} do
-      assert_raise KeyError, ~s<key :index not found in: [id: "#{doc_id}"]>, fn ->
-        Document.get(id: doc_id, source_only: true)
-      end
-    end
-
-    test "raises an exception if missing ID" do
-      assert_raise KeyError, "key :id not found in: []", fn ->
-        Document.get(index: @index_name, source_only: true)
-      end
-    end
-
-    test "returns a sucessful response", %{doc_ids: [doc_id | _]} do
-      assert {:ok, %{"message" => "Hello World 1!"}} =
-               Document.get(index: @index_name, id: doc_id, source_only: true)
-    end
-  end
-
   describe "exists?/1" do
     test "raises an exception if missing index", %{fake_id: doc_id} do
       assert_raise KeyError, ~s<key :index not found in: [id: "#{doc_id}"]>, fn ->
@@ -128,25 +109,6 @@ defmodule ElasticsearchEx.Api.Document.SingleTest do
     test "returns a sucessful response", %{doc_ids: [doc_id | _], fake_id: fake_id} do
       refute Document.exists?(index: @index_name, id: fake_id)
       assert Document.exists?(index: @index_name, id: doc_id)
-    end
-  end
-
-  describe "exists?/1 with source_only" do
-    test "raises an exception if missing index", %{fake_id: doc_id} do
-      assert_raise KeyError, ~s<key :index not found in: [id: "#{doc_id}"]>, fn ->
-        Document.exists?(id: doc_id, source_only: true)
-      end
-    end
-
-    test "raises an exception if missing ID" do
-      assert_raise KeyError, "key :id not found in: []", fn ->
-        Document.exists?(index: @index_name, source_only: true)
-      end
-    end
-
-    test "returns a sucessful response", %{doc_ids: [doc_id | _], fake_id: fake_id} do
-      refute Document.exists?(index: @index_name, id: fake_id, source_only: true)
-      assert Document.exists?(index: @index_name, id: doc_id, source_only: true)
     end
   end
 
