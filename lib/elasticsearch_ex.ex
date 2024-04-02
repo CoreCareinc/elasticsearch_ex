@@ -5,6 +5,8 @@ defmodule ElasticsearchEx do
 
   ## Module attributes
 
+  @type source :: map()
+
   @type document_id :: binary()
 
   @type index :: atom() | binary()
@@ -22,8 +24,9 @@ defmodule ElasticsearchEx do
   defdelegate search(query, opts \\ []), to: ElasticsearchEx.Api.Search
 
   @doc """
-  Refer to `ElasticsearchEx.Api.Search.search/2` documentation.
+  Refer to `ElasticsearchEx.Api.Document.index/4` documentation.
   """
-  @spec index(map(), keyword()) :: response()
-  defdelegate index(document, opts \\ []), to: ElasticsearchEx.Api.Document
+  @spec index(source(), index(), nil | document_id(), keyword()) :: response()
+  defdelegate index(source, index, document_id \\ nil, opts \\ []),
+    to: ElasticsearchEx.Api.Document
 end
