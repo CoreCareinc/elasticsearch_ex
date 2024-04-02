@@ -183,6 +183,22 @@ defmodule ElasticsearchEx.Api.Document do
     Client.get("#{index}/#{segment}/#{document_id}", nil, nil, opts)
   end
 
+  # TODO: Remove with v1.0.0
+  @doc false
+  @deprecated "Use ElasticsearchEx.Api.Document.get/1 instead"
+  def get_document(opts \\ []) when is_list(opts) do
+    get(opts)
+  end
+
+  # TODO: Remove with v1.0.0
+  @doc false
+  @deprecated "Use ElasticsearchEx.Api.Document.get/1 with `source_only: true` instead"
+  def get_source(opts \\ []) when is_list(opts) do
+    opts = Keyword.put(opts, :source_only, true)
+
+    get(opts)
+  end
+
   @doc """
   Checks if the specified JSON document from an index exists.
 
