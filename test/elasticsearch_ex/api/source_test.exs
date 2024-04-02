@@ -5,7 +5,7 @@ defmodule ElasticsearchEx.Api.Source.SingleTest do
 
   ## Module attributes
 
-  @index_name "test_api_document_single"
+  @index_name "test_api_source"
 
   ## Tests
 
