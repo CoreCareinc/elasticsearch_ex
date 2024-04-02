@@ -1,6 +1,11 @@
 # Changelog
 
 
+## v0.7.0
+
+* **Changes:**
+  * Renamed `ElasticsearchEx.Api.Document.get_document/1` to `ElasticsearchEx.Api.Document.get/1`
+
 ## v0.6.1 (2023-12-28)
 
 * **Changes:**
@@ -39,7 +44,7 @@
   * Added new functions related to single document operations:
     * `ElasticsearchEx.Api.Document.index/2`
     * `ElasticsearchEx.Api.Document.create/2`
-    * `ElasticsearchEx.Api.Document.get_document/1`
+    * `ElasticsearchEx.Api.Document.get_document/11 to Api.Document.get/11`
     * `ElasticsearchEx.Api.Document.get_source/1`
     * `ElasticsearchEx.Api.Document.document_exists?/1`
     * `ElasticsearchEx.Api.Document.source_exists?/1`

@@ -134,7 +134,7 @@ defmodule ElasticsearchEx.Api.Document do
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.get_document(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.get(index: "my-index-000001", id: "0")
       {:ok,
        %{
          "_id" => "0",
@@ -156,8 +156,8 @@ defmodule ElasticsearchEx.Api.Document do
          "found" => true
        }}
   """
-  @spec get_document(keyword()) :: ElasticsearchEx.response()
-  def get_document(opts \\ []) when is_list(opts) do
+  @spec get(keyword()) :: ElasticsearchEx.response()
+  def get(opts \\ []) when is_list(opts) do
     {index, document_id, opts} = extract_required_index_and_required_id!(opts)
 
     Client.get("#{index}/_doc/#{document_id}", nil, nil, opts)
