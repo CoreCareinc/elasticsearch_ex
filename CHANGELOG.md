@@ -5,6 +5,7 @@
 
 * **Changes:**
   * Renamed `ElasticsearchEx.Api.Document.get_document/1` to `ElasticsearchEx.Api.Document.get/1`
+  * Replaced `ElasticsearchEx.Api.Document.get_source/1` by `ElasticsearchEx.Api.Document.get/1` with `source_only: true` option
 
 ## v0.6.2 (2024-04-01)
 
