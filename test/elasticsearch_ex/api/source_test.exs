@@ -1,4 +1,4 @@
-defmodule ElasticsearchEx.Api.Source.SingleTest do
+defmodule ElasticsearchEx.Api.SourceTest do
   use ElasticsearchEx.ConnCase, async: true
 
   alias ElasticsearchEx.Api.Source
@@ -31,16 +31,7 @@ defmodule ElasticsearchEx.Api.Source.SingleTest do
     end
 
     test "returns a sucessful response", %{doc_ids: [doc_id | _]} do
-      assert {:ok,
-              %{
-                "_id" => ^doc_id,
-                "_index" => "test_api_document_single",
-                "_primary_term" => 1,
-                "_seq_no" => 0,
-                "_version" => 1,
-                "_source" => %{"message" => "Hello World 1!"},
-                "found" => true
-              }} = Source.get(index: @index_name, id: doc_id)
+      assert {:ok, %{"message" => "Hello World 1!"}} = Source.get(index: @index_name, id: doc_id)
     end
   end
 

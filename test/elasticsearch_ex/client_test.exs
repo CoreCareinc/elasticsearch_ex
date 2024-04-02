@@ -1,5 +1,5 @@
 defmodule ElasticsearchEx.ClientTest do
-  use ElasticsearchEx.ConnCase
+  use ElasticsearchEx.ConnCase, async: true
 
   alias ElasticsearchEx.Client
 
