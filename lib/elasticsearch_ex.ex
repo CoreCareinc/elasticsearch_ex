@@ -5,6 +5,12 @@ defmodule ElasticsearchEx do
 
   ## Module attributes
 
+  @type document_id :: binary()
+
+  @type index :: atom() | binary()
+
+  @type opts :: keyword()
+
   @type response :: {:ok, term()} | {:error, ElasticsearchEx.Error.t()}
 
   ## Public functions
