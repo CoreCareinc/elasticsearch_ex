@@ -207,36 +207,41 @@ defmodule ElasticsearchEx.Api.Document do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html#docs-get-api-query-params)
   for a detailed list of the parameters.
 
+  You can provide the option `source_only: true` to return only the source of the document.
+
   ### Examples
 
-      iex> ElasticsearchEx.Api.Document.document_exists?(index: "my-index-000001", id: "0")
+      iex> ElasticsearchEx.Api.Document.exists?(index: "my-index-000001", id: "0")
+      true
+
+  ### Examples - Returns only the source
+
+      iex> ElasticsearchEx.Api.Document.exists?(index: "my-index-000001", id: "0", source_only: true)
       true
   """
-  @spec document_exists?(keyword()) :: boolean()
-  def document_exists?(opts \\ []) when is_list(opts) do
+  @spec exists?(keyword()) :: boolean()
+  def exists?(opts \\ []) when is_list(opts) do
     {index, document_id, opts} = extract_required_index_and_required_id!(opts)
+    {source_only, opts} = Keyword.pop(opts, :source_only, false)
+    segment = if(source_only, do: :_source, else: :_doc)
 
-    Client.head("#{index}/_doc/#{document_id}", nil, opts) == :ok
+    Client.head("#{index}/#{segment}/#{document_id}", nil, opts) == :ok
   end
 
-  @doc """
-  Checks if the specified JSON source from an index exists.
+  # TODO: Remove with v1.0.0
+  @doc false
+  @deprecated "Use ElasticsearchEx.Api.Document.exists?/1 instead"
+  def document_exists?(opts \\ []) when is_list(opts) do
+    exists?(opts)
+  end
 
-  ### Query parameters
-
-  Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html#docs-get-api-query-params)
-  for a detailed list of the parameters.
-
-  ### Examples
-
-      iex> ElasticsearchEx.Api.Document.source_exists?(index: "my-index-000001", id: "0")
-      true
-  """
-  @spec source_exists?(keyword()) :: boolean()
+  # TODO: Remove with v1.0.0
+  @doc false
+  @deprecated "Use ElasticsearchEx.Api.Document.exists?/1 with `source_only: true` instead"
   def source_exists?(opts \\ []) when is_list(opts) do
-    {index, document_id, opts} = extract_required_index_and_required_id!(opts)
+    opts = Keyword.put(opts, :source_only, true)
 
-    Client.head("#{index}/_source/#{document_id}", nil, opts) == :ok
+    exists?(opts)
   end
 
   @doc """

@@ -112,41 +112,41 @@ defmodule ElasticsearchEx.Api.Document.SingleTest do
     end
   end
 
-  describe "document_exists?/2" do
+  describe "exists?/1" do
     test "raises an exception if missing index", %{fake_id: doc_id} do
       assert_raise KeyError, ~s<key :index not found in: [id: "#{doc_id}"]>, fn ->
-        Document.document_exists?(id: doc_id)
+        Document.exists?(id: doc_id)
       end
     end
 
     test "raises an exception if missing ID" do
       assert_raise KeyError, "key :id not found in: []", fn ->
-        Document.document_exists?(index: @index_name)
+        Document.exists?(index: @index_name)
       end
     end
 
     test "returns a sucessful response", %{doc_ids: [doc_id | _], fake_id: fake_id} do
-      refute Document.document_exists?(index: @index_name, id: fake_id)
-      assert Document.document_exists?(index: @index_name, id: doc_id)
+      refute Document.exists?(index: @index_name, id: fake_id)
+      assert Document.exists?(index: @index_name, id: doc_id)
     end
   end
 
-  describe "source_exists?/2" do
+  describe "exists?/1 with source_only" do
     test "raises an exception if missing index", %{fake_id: doc_id} do
       assert_raise KeyError, ~s<key :index not found in: [id: "#{doc_id}"]>, fn ->
-        Document.source_exists?(id: doc_id)
+        Document.exists?(id: doc_id, source_only: true)
       end
     end
 
     test "raises an exception if missing ID" do
       assert_raise KeyError, "key :id not found in: []", fn ->
-        Document.source_exists?(index: @index_name)
+        Document.exists?(index: @index_name, source_only: true)
       end
     end
 
     test "returns a sucessful response", %{doc_ids: [doc_id | _], fake_id: fake_id} do
-      refute Document.source_exists?(index: @index_name, id: fake_id)
-      assert Document.source_exists?(index: @index_name, id: doc_id)
+      refute Document.exists?(index: @index_name, id: fake_id, source_only: true)
+      assert Document.exists?(index: @index_name, id: doc_id, source_only: true)
     end
   end
 
