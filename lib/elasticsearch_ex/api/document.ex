@@ -15,36 +15,6 @@ defmodule ElasticsearchEx.Api.Document do
 
   alias ElasticsearchEx.Client
 
-  ## Deprecated functions
-
-  # TODO: Remove with v1.0.0
-  @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.get/1 instead"
-  def get_document(opts \\ []) when is_list(opts) do
-    get(opts)
-  end
-
-  # TODO: Remove with v1.0.0
-  @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.Source.get/1 instead"
-  def get_source(opts \\ []) when is_list(opts) do
-    ElasticsearchEx.Api.Document.Source.get(opts)
-  end
-
-  # TODO: Remove with v1.0.0
-  @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.exists?/1 instead"
-  def document_exists?(opts \\ []) when is_list(opts) do
-    exists?(opts)
-  end
-
-  # TODO: Remove with v1.0.0
-  @doc false
-  @deprecated "Use ElasticsearchEx.Api.Document.Source.exists?/1 instead"
-  def source_exists?(opts \\ []) when is_list(opts) do
-    ElasticsearchEx.Api.Document.Source.exists?(opts)
-  end
-
   ## Public functions
 
   @doc """
