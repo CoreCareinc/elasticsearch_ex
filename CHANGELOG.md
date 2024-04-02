@@ -6,6 +6,12 @@
 * **Changes:**
   * Renamed `ElasticsearchEx.Api.Document.get_document/1` to `ElasticsearchEx.Api.Document.get/1`
 
+## v0.6.2 (2024-04-01)
+
+* **Changes:**
+  * Updated the dependencies
+  * Updated Erlang/Elixir/Elasticsearch versions in the testing matrix
+
 ## v0.6.1 (2023-12-28)
 
 * **Changes:**
