@@ -81,7 +81,7 @@ defmodule ElasticsearchEx.Api.Document do
          "result" => "created"
        }}
   """
-  @spec index(source(), index(), nil | document_id(), keyword()) :: ElasticsearchEx.response()
+  @spec index(source(), index(), nil | document_id(), opts()) :: ElasticsearchEx.response()
   def index(source, index, document_id \\ nil, opts \\ [])
 
   def index(source, index, nil, opts)
@@ -129,7 +129,7 @@ defmodule ElasticsearchEx.Api.Document do
          "result" => "created"
        }}
   """
-  @spec create(source(), index(), document_id(), keyword()) :: ElasticsearchEx.response()
+  @spec create(source(), index(), document_id(), opts()) :: ElasticsearchEx.response()
   def create(source, index, document_id, opts \\ [])
       when is_map(source) and is_index(index) and is_document_id(document_id) and is_list(opts) do
     Client.put("/#{index}/_create/#{document_id}", nil, source, opts)
@@ -167,7 +167,7 @@ defmodule ElasticsearchEx.Api.Document do
          "found" => true
        }}
   """
-  @spec get(index(), document_id(), keyword()) :: ElasticsearchEx.response()
+  @spec get(index(), document_id(), opts()) :: ElasticsearchEx.response()
   def get(index, document_id, opts \\ [])
       when is_index(index) and is_document_id(document_id) and is_list(opts) do
     Client.get("/#{index}/_doc/#{document_id}", nil, nil, opts)
@@ -210,7 +210,7 @@ defmodule ElasticsearchEx.Api.Document do
          ]
        }}
   """
-  @spec get_ids([document_id()], index(), keyword()) :: ElasticsearchEx.response()
+  @spec get_ids([document_id()], index(), opts()) :: ElasticsearchEx.response()
   def get_ids(document_ids, index, opts \\ [])
 
   def get_ids(_document_ids, nil, _opts) do
@@ -268,7 +268,7 @@ defmodule ElasticsearchEx.Api.Document do
          ]
        }}
   """
-  @spec get_docs([map()], nil | index(), keyword()) :: ElasticsearchEx.response()
+  @spec get_docs([map()], nil | index(), opts()) :: ElasticsearchEx.response()
   def get_docs(documents, index \\ nil, opts \\ [])
       when is_list(documents) and (is_nil(index) or is_index(index)) and is_list(opts) do
     Enum.each(documents, fn document ->
@@ -367,7 +367,7 @@ defmodule ElasticsearchEx.Api.Document do
       iex> ElasticsearchEx.Api.Document.multi_get([{"my-index-000001", "BrS8nI4BpDBWjw9UUTk5"}, "my-index-000001"])
       ** (ArgumentError) invalid value, expected a list of maps or document IDs, got: `[{"my-index-000001", "BrS8nI4BpDBWjw9UUTk5"}, "my-index-000001"]`
   """
-  @spec multi_get(list(), nil | index(), keyword()) :: ElasticsearchEx.response()
+  @spec multi_get(list(), nil | index(), opts()) :: ElasticsearchEx.response()
   def multi_get(values, index \\ nil, opts \\ []) when is_list(values) and is_list(opts) do
     cond do
       Enum.all?(values, &is_map/1) ->
@@ -395,7 +395,7 @@ defmodule ElasticsearchEx.Api.Document do
       iex> ElasticsearchEx.Api.Document.exists?(index: "my-index-000001", id: "0")
       true
   """
-  @spec exists?(index(), document_id(), keyword()) :: boolean()
+  @spec exists?(index(), document_id(), opts()) :: boolean()
   def exists?(index, document_id, opts \\ [])
       when is_index(index) and is_document_id(document_id) and is_list(opts) do
     Client.head("/#{index}/_doc/#{document_id}", nil, opts) == :ok
@@ -433,7 +433,7 @@ defmodule ElasticsearchEx.Api.Document do
          ...
        }}
   """
-  @spec delete(index(), document_id(), keyword()) :: ElasticsearchEx.response()
+  @spec delete(index(), document_id(), opts()) :: ElasticsearchEx.response()
   def delete(index, document_id, opts \\ [])
       when is_index(index) and is_document_id(document_id) and is_list(opts) do
     Client.delete("/#{index}/_doc/#{document_id}", nil, nil, opts)
@@ -476,7 +476,7 @@ defmodule ElasticsearchEx.Api.Document do
          "result" => "updated"
        }}
   """
-  @spec update(source(), index(), document_id(), keyword()) :: ElasticsearchEx.response()
+  @spec update(source(), index(), document_id(), opts()) :: ElasticsearchEx.response()
   def update(source, index, document_id, opts \\ [])
       when is_map(source) and is_index(index) and is_document_id(document_id) and is_list(opts) do
     Client.post("/#{index}/_update/#{document_id}", nil, source, opts)

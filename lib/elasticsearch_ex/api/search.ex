@@ -5,10 +5,17 @@ defmodule ElasticsearchEx.Api.Search do
   Most search APIs support [multi-target syntax](https://www.elastic.co/guide/en/elasticsearch/reference/current/api-conventions.html#api-multi-index), with the exception of the [explain API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html).
   """
 
-  import ElasticsearchEx.Api.Utils,
-    only: [extract_required_index!: 1, extract_optional_index: 1, merge_path_items: 1]
+  import ElasticsearchEx.Guards
 
   alias ElasticsearchEx.Client
+
+  ## Typespecs
+
+  @type query :: ElasticsearchEx.query()
+
+  @type index :: ElasticsearchEx.index()
+
+  @type opts :: ElasticsearchEx.opts()
 
   ## Module attributes
 
@@ -72,12 +79,15 @@ defmodule ElasticsearchEx.Api.Search do
          "took" => 5
        }}
   """
-  @spec search(map(), keyword()) :: ElasticsearchEx.response()
-  def search(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_optional_index(opts)
-    path = merge_path_items([index, "_search"])
+  @spec search(query(), index(), opts()) :: ElasticsearchEx.response()
+  def search(query, index \\ nil, opts \\ [])
 
-    Client.post(path, nil, query, opts)
+  def search(query, nil, opts) when is_map(query) and is_list(opts) do
+    Client.post("/_search", nil, query, opts)
+  end
+
+  def search(query, index, opts) when is_map(query) and is_index(index) and is_list(opts) do
+    Client.post("/#{index}/_search", nil, query, opts)
   end
 
   @doc """
@@ -161,12 +171,16 @@ defmodule ElasticsearchEx.Api.Search do
          "took" => 21
        }}
   """
-  @spec multi_search([map()], keyword()) :: ElasticsearchEx.response()
-  def multi_search(queries, opts \\ []) when is_list(queries) and is_list(opts) do
-    {index, opts} = extract_optional_index(opts)
-    path = merge_path_items([index, "_msearch"])
+  @spec multi_search([query()], nil | index(), opts()) :: ElasticsearchEx.response()
+  def multi_search(queries, index \\ nil, opts \\ [])
 
-    Client.post(path, @ndjson_headers, queries, opts)
+  def multi_search(queries, nil, opts) when is_list(queries) and is_list(opts) do
+    Client.post("/_msearch", @ndjson_headers, queries, opts)
+  end
+
+  def multi_search(queries, index, opts)
+      when is_list(queries) and is_index(index) and is_list(opts) do
+    Client.post("/#{index}/_msearch", @ndjson_headers, queries, opts)
   end
 
   @doc """
@@ -217,12 +231,15 @@ defmodule ElasticsearchEx.Api.Search do
          "start_time_in_millis" => 1583945890986
        }}
   """
-  @spec async_search(map(), keyword()) :: ElasticsearchEx.response()
-  def async_search(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_optional_index(opts)
-    path = merge_path_items([index, "_async_search"])
+  @spec async_search(query(), nil | index(), opts()) :: ElasticsearchEx.response()
+  def async_search(query, index \\ nil, opts \\ [])
 
-    Client.post(path, nil, query, opts)
+  def async_search(query, nil, opts) when is_map(query) and is_list(opts) do
+    Client.post("/_async_search", nil, query, opts)
+  end
+
+  def async_search(query, index, opts) when is_map(query) and is_index(index) and is_list(opts) do
+    Client.post("/#{index}/_async_search", nil, query, opts)
   end
 
   @doc """
@@ -259,7 +276,7 @@ defmodule ElasticsearchEx.Api.Search do
          "start_time_in_millis" => 1583945890986
        }}
   """
-  @spec get_async_search(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec get_async_search(binary(), opts()) :: ElasticsearchEx.response()
   def get_async_search(async_search_id, opts \\ [])
       when is_binary(async_search_id) and is_list(opts) do
     Client.get("/_async_search/#{async_search_id}", nil, nil, opts)
@@ -287,7 +304,7 @@ defmodule ElasticsearchEx.Api.Search do
          "start_time_in_millis" => 1583945890986
        }}
   """
-  @spec get_async_search_status(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec get_async_search_status(binary(), opts()) :: ElasticsearchEx.response()
   def get_async_search_status(async_search_id, opts \\ [])
       when is_binary(async_search_id) and is_list(opts) do
     Client.get("/_async_search/status/#{async_search_id}", nil, nil, opts)
@@ -303,7 +320,7 @@ defmodule ElasticsearchEx.Api.Search do
       iex> ElasticsearchEx.Api.Search.delete_async_search("FmRldE8zREVEUzA2ZVpUeGs2ejJFUFEaMkZ5QTVrSTZSaVN3WlNFVmtlWHJsdzoxMDc=")
       nil
   """
-  @spec delete_async_search(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec delete_async_search(binary(), opts()) :: ElasticsearchEx.response()
   def delete_async_search(async_search_id, opts \\ [])
       when is_binary(async_search_id) and is_list(opts) do
     Client.delete("/_async_search/#{async_search_id}", nil, nil, opts)
@@ -325,10 +342,8 @@ defmodule ElasticsearchEx.Api.Search do
          "id" => "gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA=="
        }}
   """
-  @spec create_pit(keyword()) :: ElasticsearchEx.response()
-  def create_pit(opts \\ []) when is_list(opts) do
-    {index, opts} = extract_required_index!(opts)
-
+  @spec create_pit(index(), opts()) :: ElasticsearchEx.response()
+  def create_pit(index, opts \\ []) when is_index(index) and is_list(opts) do
     Client.post("/#{index}/_pit", nil, "", opts)
   end
 
@@ -342,7 +357,7 @@ defmodule ElasticsearchEx.Api.Search do
       iex> ElasticsearchEx.Api.Search.close_pit("gcSHBAEJb2Jhbl9qb2JzFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAFkF0Q1R5OUhqUXZtazhYaU5oRUVlN3cAAAAAAAAAAFUWdlpGWjkzbEdTM3VUV0tRTFNQMVc5QQABFmJsOTBBMHEwUTVld19yQ3RBYkEtSVEAAA==")
       {:ok, %{"num_freed" => 1, "succeeded" => true}}
   """
-  @spec close_pit(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec close_pit(binary(), opts()) :: ElasticsearchEx.response()
   def close_pit(pit_id, opts \\ []) when is_binary(pit_id) and is_list(opts) do
     Client.delete("/_pit", nil, %{id: pit_id}, opts)
   end
@@ -366,10 +381,9 @@ defmodule ElasticsearchEx.Api.Search do
          "terms" => ["kibana"]
        }}
   """
-  @spec terms_enum(map(), keyword()) :: ElasticsearchEx.response()
-  def terms_enum(query, opts \\ []) when is_map(query) and is_list(opts) do
-    {index, opts} = extract_required_index!(opts)
-
+  @spec terms_enum(map(), index(), opts()) :: ElasticsearchEx.response()
+  def terms_enum(query, index, opts \\ [])
+      when is_map(query) and is_index(index) and is_list(opts) do
     Client.post("/#{index}/_terms_enum", nil, query, opts)
   end
 
@@ -402,7 +416,7 @@ defmodule ElasticsearchEx.Api.Search do
          "took" => 1
        }}
   """
-  @spec get_scroll(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec get_scroll(binary(), opts()) :: ElasticsearchEx.response()
   def get_scroll(scroll_id, opts \\ []) when is_binary(scroll_id) and is_list(opts) do
     Client.post("/_search/scroll", nil, %{scroll_id: scroll_id}, opts)
   end
@@ -417,7 +431,7 @@ defmodule ElasticsearchEx.Api.Search do
       ...> )
       {:ok, %{"num_freed" => 1, "succeeded" => true}}
   """
-  @spec clear_scroll(binary(), keyword()) :: ElasticsearchEx.response()
+  @spec clear_scroll(binary(), opts()) :: ElasticsearchEx.response()
   def clear_scroll(scroll_id, opts \\ []) when is_binary(scroll_id) and is_list(opts) do
     Client.delete("/_search/scroll", nil, %{scroll_id: scroll_id}, opts)
   end
