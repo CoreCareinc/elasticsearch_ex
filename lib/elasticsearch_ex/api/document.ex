@@ -270,8 +270,8 @@ defmodule ElasticsearchEx.Api.Document do
          ]
        }}
 
-  Query with a `List` of `Map`, the following keys are supported: `:index`,
-  `:_index`, `:id`, `:_id`, `:source`, `:_source`, `:stored_fields`, `:_stored_fields` and `:routing`:
+  Query with a `List` of `Map`, the following keys are supported: `:index`, `:_index`, `:id`,
+  `:_id`, `:source`, `:_source`, `:stored_fields`, `:_stored_fields` and `:routing`:
 
       iex> ElasticsearchEx.Api.Document.multi_get(
       ...>   docs: [
