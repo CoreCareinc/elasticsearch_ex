@@ -1,5 +1,5 @@
 defmodule ElasticsearchEx.Api.SourceTest do
-  use ElasticsearchEx.ConnCase, async: true
+  use ElasticsearchEx.ConnCase
 
   alias ElasticsearchEx.Api.Source
 

@@ -1,5 +1,5 @@
 defmodule ElasticsearchEx.Api.Document.SingleTest do
-  use ElasticsearchEx.ConnCase, async: true
+  use ElasticsearchEx.ConnCase
 
   alias ElasticsearchEx.Api.Document
 
