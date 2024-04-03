@@ -1,6 +1,6 @@
-defmodule ElasticsearchEx.Api.Info do
+defmodule ElasticsearchEx.Api.Usage do
   @moduledoc """
-  Provides general information about the installed X-Pack features.
+  Provides usage information about the installed X-Pack features.
   """
 
   alias ElasticsearchEx.Client
@@ -12,11 +12,11 @@ defmodule ElasticsearchEx.Api.Info do
   ## Public functions
 
   @doc """
-  Provides general information about the installed X-Pack features.
+  Provides usage information about the installed X-Pack features.
 
   ### Examples
 
-      iex> ElasticsearchEx.Api.Info.xpack()
+      iex> ElasticsearchEx.Api.Usage.xpack()
       {:ok,
        %{
          "build" => %{
@@ -63,6 +63,6 @@ defmodule ElasticsearchEx.Api.Info do
   @doc since: "1.2.0"
   @spec xpack(opts()) :: ElasticsearchEx.response()
   def xpack(opts \\ []) when is_list(opts) do
-    Client.get("/_xpack", nil, nil, opts)
+    Client.get("/_xpack/usage", nil, nil, opts)
   end
 end
