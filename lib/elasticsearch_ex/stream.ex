@@ -13,11 +13,11 @@ defmodule ElasticsearchEx.Stream do
 
   @type index :: ElasticsearchEx.index()
 
-  @type pit :: %{required(:id) => binary(), required(:keep_alive) => binary()}
+  @typep pit :: %{required(:id) => binary(), required(:keep_alive) => binary()}
 
-  @type search_after :: []
+  @typep search_after :: []
 
-  @type acc :: {pit(), nil | search_after()}
+  @typep acc :: {pit(), nil | search_after()}
 
   ## Module attributes
 
@@ -38,6 +38,7 @@ defmodule ElasticsearchEx.Stream do
       ...> )
       #Function<52.124013645/2 in Stream.resource/3>
   """
+  @doc since: "1.3.0"
   @spec stream(query(), nil | index(), keyword()) :: Enumerable.t()
   def stream(query, index \\ nil, params \\ []) do
     {keep_alive, params} = Keyword.pop(params, :keep_alive, "10s")
