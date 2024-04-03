@@ -14,7 +14,7 @@ defmodule ElasticsearchEx.Utils do
     prefix |> Enum.join(",") |> format_path(operation)
   end
 
-  def format_path(prefix, operation) when is_binary(prefix) and is_identifier(operation) do
+  def format_path(prefix, operation) when is_identifier(prefix) and is_identifier(operation) do
     "/#{prefix}/#{operation}"
   end
 
@@ -31,7 +31,7 @@ defmodule ElasticsearchEx.Utils do
   end
 
   def format_path(prefix, operation, suffix)
-      when is_binary(prefix) and is_identifier(operation) and is_identifier(suffix) do
+      when is_identifier(prefix) and is_identifier(operation) and is_identifier(suffix) do
     "/#{prefix}/#{operation}/#{suffix}"
   end
 end
