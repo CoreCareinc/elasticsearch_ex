@@ -30,7 +30,12 @@ defmodule ElasticsearchEx.Stream do
 
   ## Examples
 
-      iex> ElasticsearchEx.Stream.stream(%{query: %{match_all: %{}}, sort: [%{"@timestamp" => "desc"}]}, "my_index", keep_alive: "30s", per_page: 500)
+      iex> ElasticsearchEx.Stream.stream(
+      ...>   %{query: %{match_all: %{}}, sort: [%{message: :desc}]},
+      ...>   :my_index,
+      ...>   keep_alive: "30s",
+      ...>   per_page: 500
+      ...> )
       #Function<52.124013645/2 in Stream.resource/3>
   """
   @spec stream(query(), nil | index(), keyword()) :: Enumerable.t()
