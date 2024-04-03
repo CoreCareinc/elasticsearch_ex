@@ -1,4 +1,6 @@
 defmodule ElasticsearchEx.Utils do
+  @moduledoc false
+
   import ElasticsearchEx.Guards, only: [is_enum: 1, is_identifier: 1]
 
   ## Public functions

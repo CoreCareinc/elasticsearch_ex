@@ -510,7 +510,7 @@ defmodule ElasticsearchEx.Api.Search do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html#search-rank-eval-api-query-params)
   for a detailed list of the parameters.
   """
-  @spec rank_evaluation(index(), opts()) :: ElasticsearchEx.response()
+  @spec rank_evaluation(map(), index(), opts()) :: ElasticsearchEx.response()
   def rank_evaluation(body, index, opts \\ [])
       when is_map(body) and is_index(index) and is_list(opts) do
     index
@@ -577,7 +577,7 @@ defmodule ElasticsearchEx.Api.Search do
   Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/multi-search-template.html#multi-search-template-api-query-params)
   for a detailed list of the parameters.
   """
-  @spec multi_search(Enumerable.t(), nil | index(), opts()) :: ElasticsearchEx.response()
+  @spec multi_search_template(Enumerable.t(), nil | index(), opts()) :: ElasticsearchEx.response()
   def multi_search_template(body, index \\ nil, opts \\ [])
       when is_enum(body) and is_list(opts) do
     queries =
