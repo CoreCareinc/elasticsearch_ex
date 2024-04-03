@@ -4,6 +4,7 @@ defmodule ElasticsearchEx.Api.Document do
   """
 
   import ElasticsearchEx.Guards
+  import ElasticsearchEx.Utils, only: [format_path: 2]
 
   require Logger
 
@@ -285,14 +286,9 @@ defmodule ElasticsearchEx.Api.Document do
       end
     end)
 
-    path =
-      if is_index(index) do
-        "/#{index}/_mget"
-      else
-        "/_mget"
-      end
-
-    Client.post(path, nil, %{docs: documents}, opts)
+    index
+    |> format_path(:_mget)
+    |> Client.post(nil, %{docs: documents}, opts)
   end
 
   @doc """
