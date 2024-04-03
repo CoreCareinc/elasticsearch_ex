@@ -97,9 +97,9 @@ defmodule ElasticsearchEx.Api.Search.TestingTest do
                     %{
                       "aggregations" => [],
                       "cluster" => "(local)",
-                      "id" => "[ZXQafYKbRce8PVxDR-hS8w][test_api_search_testing][0]",
-                      "index" => "test_api_search_testing",
-                      "node_id" => "ZXQafYKbRce8PVxDR-hS8w",
+                      "id" => _,
+                      "index" => @index_name,
+                      "node_id" => _,
                       "searches" => [
                         %{
                           "collector" => [

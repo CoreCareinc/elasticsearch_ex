@@ -63,8 +63,8 @@ defmodule ElasticsearchEx.Api.Search.TemplateTest do
                  "_shards" => %{
                    "failed" => 0,
                    "skipped" => 0,
-                   "successful" => 2,
-                   "total" => 2
+                   "successful" => total,
+                   "total" => total
                  },
                  "hits" => %{
                    "hits" => [],
