@@ -502,21 +502,21 @@ defmodule ElasticsearchEx.Api.Search do
     |> search(index, opts)
   end
 
-  # TODO: Check the Elasticsearch documentation.
-  # @doc """
-  # Allows you to evaluate the quality of ranked search results over a set of typical search queries.
+  @doc """
+  Allows you to evaluate the quality of ranked search results over a set of typical search queries.
 
-  # ### Query parameters
+  ### Query parameters
 
-  # Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html#search-rank-eval-api-query-params)
-  # for a detailed list of the parameters.
-  # """
-  # @spec rank_evaluation(index(), opts()) :: ElasticsearchEx.response()
-  # def rank_evaluation(index, opts \\ []) when is_index(index) and is_list(opts) do
-  #   index
-  #   |> format_path(:_rank_eval)
-  #   |> Client.get(nil, nil, opts)
-  # end
+  Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-rank-eval.html#search-rank-eval-api-query-params)
+  for a detailed list of the parameters.
+  """
+  @spec rank_evaluation(index(), opts()) :: ElasticsearchEx.response()
+  def rank_evaluation(body, index, opts \\ [])
+      when is_map(body) and is_index(index) and is_list(opts) do
+    index
+    |> format_path(:_rank_eval)
+    |> Client.post(nil, body, opts)
+  end
 
   @doc """
   Returns the indices and shards that a search request would be executed against.
