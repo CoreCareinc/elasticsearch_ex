@@ -2,7 +2,7 @@ defmodule ElasticsearchEx.MixProject do
   use Mix.Project
 
   @source_url "https://github.com/CoreCareinc/elasticsearch_ex"
-  @version "1.3.0"
+  @version "1.3.1"
 
   def project do
     [
@@ -77,7 +77,7 @@ defmodule ElasticsearchEx.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:any_http, "~> 0.6"},
+      {:req, "~> 0.4"},
       {:jason, "~> 1.4"},
 
       ## Dev dependencies
