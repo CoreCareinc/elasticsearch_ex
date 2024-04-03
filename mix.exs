@@ -53,6 +53,7 @@ defmodule ElasticsearchEx.MixProject do
       source_url: @source_url,
       groups_for_modules: [
         API: [
+          ElasticsearchEx.Api.Cat,
           ElasticsearchEx.Api.Document,
           ElasticsearchEx.Api.Document.Source,
           ElasticsearchEx.Api.Search
