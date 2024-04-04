@@ -385,6 +385,45 @@ defmodule ElasticsearchEx.Api.Document do
   end
 
   @doc """
+  Copies documents from a source to a destination.
+
+  The source can be any existing index, alias, or data stream. The destination must differ from the source. For example, you cannot reindex a data stream into itself.
+
+  ### Query parameters
+
+  Refer to the official [documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html#docs-reindex-api-query-params)
+  for a detailed list of the parameters.
+
+  ### Examples
+
+      iex> ElasticsearchEx.Api.Document.reindex(%{
+      ...>   source: %{index: "my-old-index"},
+      ...>   dest: %{index: "my-new-index"}
+      ...> })
+      {:ok,
+       %{
+         "batches" => 1,
+         "created" => 5,
+         "deleted" => 0,
+         "failures" => [],
+         "noops" => 0,
+         "requests_per_second" => -1.0,
+         "retries" => %{"bulk" => 0, "search" => 0},
+         "throttled_millis" => 0,
+         "throttled_until_millis" => 0,
+         "timed_out" => false,
+         "took" => 54,
+         "total" => 5,
+         "updated" => 0,
+         "version_conflicts" => 0
+       }}
+  """
+  @doc since: "1.4.0"
+  def reindex(body, opts \\ []) when is_map(body) do
+    Client.post("/_reindex", nil, body, opts)
+  end
+
+  @doc """
   Checks if the specified JSON document from an index exists.
 
   ### Query parameters
