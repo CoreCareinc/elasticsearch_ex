@@ -11,6 +11,9 @@
   * Replaced `:any_http` by `:req`, `Req` offers the ability to provide custom `:adapter`
   * Removed the dependency `bypass`
 
+* **Bug fixes:**
+  * Fixed a bug on `ElasticsearchEx.Api.Search.create_pid/2` with empty body
+
 ## v1.3.0 (2024-04-04)
 
 * **New features:**
