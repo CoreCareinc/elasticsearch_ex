@@ -16,45 +16,114 @@ defmodule ElasticsearchEx.Api.Search.CoreTest do
     {:ok, doc_ids: index_documents(@index_name, 3)}
   end
 
-  describe "search/3" do
-    test "returns a sucessful response", %{doc_ids: [doc_id | _]} do
-      assert {:ok,
-              %{
-                "_shards" => %{"failed" => 0, "skipped" => 0, "successful" => 1, "total" => 1},
-                "hits" => %{
-                  "hits" => [
-                    %{
-                      "_id" => ^doc_id,
-                      "_index" => @index_name,
-                      "_score" => 1.0,
-                      "_source" => %{"message" => "Hello World 1!"}
-                    }
-                  ],
-                  "max_score" => 1.0,
-                  "total" => %{"relation" => "eq", "value" => 1}
-                },
-                "timed_out" => false,
-                "took" => _took
-              }} = Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, @index_name)
+  describe "search" do
+    test "search/0 returns a sucessful response" do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} = Search.search()
+      assert length(hits) >= 3
     end
 
-    test "returns a sucessful response with no index", %{doc_ids: [doc_id | _]} do
-      assert {:ok,
-              %{
-                "_shards" => %{
-                  "failed" => 0,
-                  "skipped" => 0,
-                  "successful" => total,
-                  "total" => total
-                },
-                "hits" => %{
-                  "hits" => _hits,
-                  "max_score" => 1.0,
-                  "total" => %{"relation" => "eq", "value" => 1}
-                },
-                "timed_out" => false,
-                "took" => _took
-              }} = Search.search(%{query: %{term: %{_id: doc_id}}, size: 1})
+    test "search/1 returns a sucessful response with query", %{doc_ids: [doc_id | _]} do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1})
+
+      assert length(hits) == 1
+    end
+
+    test "search/1 returns a sucessful response with index" do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} = Search.search(@index_name)
+      assert length(hits) == 3
+    end
+
+    test "search/1 returns a sucessful response with index as nil" do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} = Search.search(nil)
+      assert length(hits) >= 3
+    end
+
+    test "search/1 returns a sucessful response with opts true" do
+      assert {:ok, %{"hits" => %{"hits" => [hit1 | _] = hits}}} = Search.search(_source: true)
+      assert length(hits) >= 3
+      assert is_map_key(hit1, "_source")
+    end
+
+    test "search/1 returns a sucessful response with opts false" do
+      assert {:ok, %{"hits" => %{"hits" => [hit1 | _] = hits}}} = Search.search(_source: false)
+      assert length(hits) >= 3
+      refute is_map_key(hit1, "_source")
+    end
+
+    test "search/2 returns a sucessful response with query and index as nil", %{
+      doc_ids: [doc_id | _]
+    } do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, nil)
+
+      assert length(hits) == 1
+    end
+
+    test "search/2 returns a sucessful response with query and index", %{doc_ids: [doc_id | _]} do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, @index_name)
+
+      assert length(hits) == 1
+    end
+
+    test "search/2 returns a sucessful response with query and fake index", %{
+      doc_ids: [doc_id | _]
+    } do
+      assert {:error,
+              %ElasticsearchEx.Error{
+                reason: "no such index [fake_index]",
+                status: 404,
+                type: "index_not_found_exception"
+              }} = Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, :fake_index)
+    end
+
+    test "search/2 returns a sucessful response with index and opts" do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} = Search.search(@index_name, _source: false)
+
+      assert length(hits) == 3
+    end
+
+    test "search/2 returns a sucessful response with index as nil and opts as true" do
+      assert {:ok, %{"hits" => %{"hits" => [hit1 | _] = hits}}} =
+               Search.search(nil, _source: true)
+
+      assert length(hits) >= 3
+      assert is_map_key(hit1, "_source")
+    end
+
+    test "search/2 returns a sucessful response with index as nil and opts as false" do
+      assert {:ok, %{"hits" => %{"hits" => hits}}} = Search.search(nil, _source: false)
+
+      assert length(hits) >= 3
+    end
+
+    test "search/2 returns a sucessful response with query and opts", %{doc_ids: [doc_id | _]} do
+      assert {:ok, %{"hits" => %{"hits" => [hit1]}}} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, _source: false)
+
+      refute is_map_key(hit1, "_source")
+    end
+
+    test "search/3 returns a sucessful response", %{doc_ids: [doc_id | _]} do
+      assert {:ok, %{"hits" => %{"hits" => [hit1]}}} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, @index_name,
+                 _source: false
+               )
+
+      refute is_map_key(hit1, "_source")
+    end
+
+    test "search/3 returns an error", %{doc_ids: [doc_id | _]} do
+      assert {:error,
+              %ElasticsearchEx.Error{
+                reason: "no such index [fake_index]",
+                status: 404,
+                type: "index_not_found_exception"
+              }} =
+               Search.search(%{query: %{term: %{_id: doc_id}}, size: 1}, :fake_index,
+                 _source: false
+               )
     end
   end
 
