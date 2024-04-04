@@ -1,7 +1,7 @@
 # Changelog
 
 
-## v1.3.1 (2024-04-04)
+## v1.4.0 (2024-04-04)
 
 * **Breaking Changes:**
 
