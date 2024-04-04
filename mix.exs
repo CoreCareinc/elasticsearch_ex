@@ -85,7 +85,7 @@ defmodule ElasticsearchEx.MixProject do
       {:ex_doc, "~> 0.30", only: :dev, runtime: false},
 
       ## Test dependencies
-      {:bypass, "~> 2.1", only: :test},
+      {:plug, "~> 1.15", only: :test},
 
       ## Dev & Test dependencies
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},

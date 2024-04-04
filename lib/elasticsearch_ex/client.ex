@@ -20,16 +20,18 @@ defmodule ElasticsearchEx.Client do
   def request(method, path, headers, body, opts \\ []) when is_list(opts) do
     {cluster, opts} = get_cluster_configuration(opts)
 
-    Req.new(method: method, redact_auth: @redact_auth, compressed: true, compress_body: true)
+    Req.new(method: method, redact_auth: @redact_auth, compressed: true)
     |> set_uri_and_userinfo(cluster, path)
     |> set_headers(cluster, headers)
     |> set_body(body)
     |> set_query_params(cluster, opts)
-    |> Req.Request.append_request_steps(inspect: &IO.inspect/1)
+    |> Req.Request.append_response_steps(nilify_empty_body: &nilify_empty_body/1)
+    # |> Req.Request.append_request_steps(inspect: &IO.inspect/1)
     |> Req.request()
     |> parse_result()
   end
 
+  @spec head(binary(), nil | map(), keyword()) :: :ok | :error
   def head(path, headers \\ nil, opts \\ []) do
     case request(:head, path, headers, nil, opts) do
       {:ok, nil} ->
@@ -44,7 +46,7 @@ defmodule ElasticsearchEx.Client do
     request(:get, path, headers, body, opts)
   end
 
-  def post(path, headers \\ nil, body \\ "", opts \\ []) do
+  def post(path, headers \\ nil, body \\ nil, opts \\ []) do
     request(:post, path, headers, body, opts)
   end
 
@@ -114,15 +116,23 @@ defmodule ElasticsearchEx.Client do
     Req.merge(req, headers: headers)
   end
 
+  defp set_body(%Req.Request{} = req, nil), do: Req.merge(req, body: "")
+
   defp set_body(%Req.Request{headers: %{@content_type_key => [@application_ndjson]}} = req, body) do
-    Req.merge(req, body: ElasticsearchEx.Ndjson.encode!(body))
+    Req.merge(req, body: ElasticsearchEx.Ndjson.encode!(body), compress_body: true)
   end
 
   defp set_body(%Req.Request{headers: %{@content_type_key => [@application_json]}} = req, body) do
-    Req.merge(req, json: body)
+    Req.merge(req, json: body, compress_body: true)
   end
 
-  defp set_body(%Req.Request{} = req, body) do
-    Req.merge(req, body: body)
+  defp set_body(%Req.Request{} = req, body), do: Req.merge(req, body: body, compress_body: true)
+
+  defp nilify_empty_body({request, %Req.Response{body: ""} = response}) do
+    {request, %{response | body: nil}}
+  end
+
+  defp nilify_empty_body({request, response}) do
+    {request, response}
   end
 end

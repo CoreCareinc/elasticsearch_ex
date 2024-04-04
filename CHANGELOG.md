@@ -1,6 +1,12 @@
 # Changelog
 
 
+## v1.3.1 (2024-04-04)
+
+* **Changes:**
+  * Replaced `:any_http` by `:req`, `Req` offers the ability to provide custom `:adapter`
+  * Removed the dependency `bypass`
+
 ## v1.3.0 (2024-04-04)
 
 * **New features:**
