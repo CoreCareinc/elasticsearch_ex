@@ -3,6 +3,10 @@
 
 ## v1.3.1 (2024-04-04)
 
+* **Breaking Changes:**
+
+  Replace the key `http_opts` by `req_opts`
+
 * **Changes:**
   * Replaced `:any_http` by `:req`, `Req` offers the ability to provide custom `:adapter`
   * Removed the dependency `bypass`
